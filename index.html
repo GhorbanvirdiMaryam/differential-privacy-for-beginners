@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Differential Privacy for Beginners — Lecture 1 Notes</title>
+  <meta name="description" content="Beginner-friendly notes on why naive anonymization fails and why differential privacy is needed." />
+
+  <style>
+    :root{
+      --text:#111827; --muted:#6b7280; --bg:#ffffff; --soft:#f8fafc;
+      --border:#e5e7eb; --link:#2563eb;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      line-height:1.65;
+    }
+    .wrap{max-width:980px; margin:0 auto; padding:28px 16px 64px;}
+    header{padding:18px 0 8px;}
+    h1{font-size:2rem; margin:0 0 6px;}
+    .subtitle{color:var(--muted); margin:0 0 18px;}
+    .card{
+      background:var(--soft); border:1px solid var(--border);
+      border-radius:16px; padding:16px; margin:18px 0;
+    }
+    .toc a{color:var(--link); text-decoration:none}
+    .toc a:hover{text-decoration:underline}
+    h2{margin-top:34px; font-size:1.5rem}
+    h3{margin-top:22px; font-size:1.15rem}
+    p{margin:10px 0}
+    ul{margin:8px 0 8px 20px}
+    code{background:#f3f4f6; padding:2px 6px; border-radius:8px}
+    hr{border:none; border-top:1px solid var(--border); margin:28px 0}
+    .note{color:var(--muted); font-size:0.95rem}
+    .pill{display:inline-block; font-size:0.85rem; padding:2px 10px; border:1px solid var(--border); border-radius:999px; background:#fff; color:var(--muted);}
+    footer{margin-top:44px; color:var(--muted); font-size:0.95rem}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Differential Privacy for Beginners</h1>
+      <p class="subtitle">Lecture 1 notes — why “obvious” privacy approaches fail (beginner-friendly, example-driven)</p>
+      <div class="card">
+        <span class="pill">Single-page site</span>
+        <span class="pill">GitHub Pages ready</span>
+        <p class="note">
+          These notes summarize the motivation section: the background story, two common “failing ideas,” and why they break.
+          The goal is clarity for beginners without changing the core ideas.
+        </p>
+      </div>
+    </header>
+
+    <section class="card toc" aria-label="Table of contents">
+      <strong>Table of Contents</strong>
+      <ul>
+        <li><a href="#background-story">1. A Background Story</a></li>
+        <li><a href="#ensure-privacy">2. How Can We Ensure Privacy for Data Contributors?</a></li>
+        <li><a href="#failing-idea-1">2.1 Failing Idea #1: Suppress Identifying Information</a>
+          <ul>
+            <li><a href="#gic">2.1.1 Massachusetts GIC</a></li>
+            <li><a href="#nyc-taxi">2.1.2 NYC Taxi &amp; Limo Commission (2014)</a></li>
+            <li><a href="#netflix">2.1.3 Netflix Prize</a></li>
+            <li><a href="#lessons-1">2.1.4 What have we learned?</a></li>
+          </ul>
+        </li>
+        <li><a href="#failing-idea-2">2.2 Failing Idea #2: Restrict Access via a Query-Answering Mechanism</a>
+          <ul>
+            <li><a href="#query-auditing">2.2.1 Query Auditing</a></li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="background-story">
+      <h2>1. A Background Story</h2>
+      <p>
+        Many organizations collect <strong>sensitive personal data</strong> from individuals. This can include demographics,
+        medical records, location traces, or online behavior. Such data is extremely useful for research, policy-making,
+        and improving products — but it can also harm people if privacy is not protected.
+      </p>
+      <p>Common examples include:</p>
+      <ul>
+        <li><strong>Government agencies</strong> (e.g., census data for planning and resource allocation)</li>
+        <li><strong>Hospitals and healthcare systems</strong> (diagnoses, treatments, payments)</li>
+        <li><strong>Technology companies</strong> (search, social networks, purchases, recommendations)</li>
+      </ul>
+      <p>
+        People often trust these organizations because they assume: the purpose is legitimate, access is controlled,
+        and strong security is used. The challenge becomes harder when data is shared with <strong>third parties</strong>
+        (researchers, partners, or the public). Trust does not automatically transfer, and even “safe-looking” releases
+        can leak information through inference.
+      </p>
+    </section>
+
+    <section id="ensure-privacy">
+      <h2>2. How Can We Ensure Privacy for Data Contributors?</h2>
+      <p>
+        The key question is:
+      </p>
+      <div class="card">
+        <p style="margin:0"><strong>How can we compute useful results from data while still protecting the privacy of the individuals in that data?</strong></p>
+      </div>
+      <p>
+        This is subtle: many intuitive solutions fail. To reason clearly, assume a simple model where a dataset contains
+        <strong>one row per person</strong> and multiple attributes per row (e.g., ZIP code, age, health conditions).
+      </p>
+    </section>
+
+    <section id="failing-idea-1">
+      <h2>2.1 Failing Idea #1: Suppress Identifying Information</h2>
+      <p>
+        A common first attempt is: remove direct identifiers like names and social security numbers before publishing the data.
+      </p>
+      <p>
+        Unfortunately, this does <strong>not</strong> guarantee privacy. People can often be re-identified using combinations
+        of remaining attributes (so-called <em>quasi-identifiers</em>).
+      </p>
+
+      <section id="gic">
+        <h3>2.1.1 Massachusetts Group Insurance Commission (GIC)</h3>
+        <p>
+          Massachusetts GIC released “anonymized” health insurance records. Names and SSNs were removed,
+          but attributes like <strong>ZIP code</strong>, <strong>date of birth</strong>, and <strong>gender</strong> remained.
+        </p>
+        <p>
+          Latanya Sweeney showed that the combination of <code>(ZIP, date of birth, gender)</code> can uniquely identify many people.
+          By linking with public voter registration records (which include names), it became possible to connect a health record
+          to a real person.
+        </p>
+        <p><strong>Lesson:</strong> Removing names is not enough — other columns can still identify people when combined.</p>
+      </section>
+
+      <section id="nyc-taxi">
+        <h3>2.1.2 NYC Taxi &amp; Limo Commission (2014)</h3>
+        <p>
+          NYC released taxi trip records including pickup/drop-off locations and times, fares, and a hashed driver identifier
+          (MD5). Since taxi medallion numbers are public, researchers could hash known medallions and match them, re-identifying drivers.
+        </p>
+        <p>
+          Even if the driver IDs were randomized instead of hashed, time/location patterns can still enable tracking.
+          For example, someone who knows details of a particular ride could locate it in the dataset and then follow the driver’s
+          other rides — or infer sensitive destinations of riders.
+        </p>
+        <p><strong>Lesson:</strong> Time and location data can be identifying, even without names.</p>
+      </section>
+
+      <section id="netflix">
+        <h3>2.1.3 The Netflix Prize</h3>
+        <p>
+          Netflix released a dataset for a recommendation competition with records like:
+          <code>(pseudonymous user ID, movie, date of rating, rating)</code>.
+        </p>
+        <p>
+          Researchers showed that by correlating these patterns with public IMDb reviews (which may include real names),
+          many Netflix users could be re-identified. This led to major controversy and legal action.
+        </p>
+        <p><strong>Lesson:</strong> Behavioral patterns can act like a fingerprint.</p>
+      </section>
+
+      <section id="lessons-1">
+        <h3>2.1.4 What have we learned?</h3>
+        <p>
+          These cases show that “remove identifiers and publish the rest” is not a reliable privacy strategy.
+          Rich datasets can often be linked with external information (auxiliary data) to re-identify individuals.
+        </p>
+      </section>
+    </section>
+
+    <section id="failing-idea-2">
+      <h2>2.2 Failing Idea #2: Restrict Access via a Query-Answering Mechanism</h2>
+      <p>
+        Another idea is: do not release the dataset. Instead, allow users to ask queries and only return aggregated answers.
+      </p>
+      <p>
+        This still can leak private information. For example, if a query describes a very small group (possibly a single person),
+        then the returned count (0 or 1) reveals that person’s sensitive attribute.
+      </p>
+
+      <div class="card">
+        <p style="margin:0">
+          Even if you only release “statistics,” carefully chosen queries can isolate individuals.
+        </p>
+      </div>
+
+      <p>
+        A common patch is to only answer queries when the result is large (e.g., at least 100). But attackers can use
+        <strong>differencing attacks</strong>: ask two large-count queries whose difference reveals one person’s information.
+      </p>
+
+      <section id="query-auditing">
+        <h3>2.2.1 Query Auditing</h3>
+        <p>
+          Query auditing tries to prevent leakage by tracking past queries and answers. Before answering a new query,
+          the system checks if combining the new answer with previous answers could reveal sensitive information.
+        </p>
+        <p>
+          However, even the act of <strong>denying</strong> a query can leak information, because the deny/release decision
+          depends on the data. Observing the system’s behavior becomes a side channel.
+        </p>
+        <p><strong>Lesson:</strong> Access control and auditing alone do not provide strong privacy guarantees.</p>
+      </section>
+    </section>
+
+    <hr />
+
+    <footer>
+      <p>
+        <strong>Next step (recommended):</strong> add the motivation for Differential Privacy (why we need a formal definition and controlled randomness),
+        and then introduce the ε-DP definition.
+      </p>
+      <p class="note">
+        Tip: You can keep expanding this single file by appending “Lecture 2”, “Lecture 3”, etc. and adding them to the Table of Contents.
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
