@@ -96,18 +96,17 @@ To address this issue, one might introduce a query auditing mechanism. Such a me
 </p>
 
 <p>
-Formally, consider a dataset
-\( D = (x_1, x_2, \ldots, x_n) \).
-A query specifies a subset of indices
-\( Q \subseteq [n] \)
-and a function \( f \), such as <em>sum</em>, <em>max</em>, or <em>median</em>.
-The answer to the query is \( f(D_Q) \).
+Formally, consider a dataset D = (x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub>).
+A query specifies a subset of indices Q ⊆ [n] and a function f,
+such as <em>sum</em>, <em>max</em>, or <em>median</em>.
+The answer to the query is f(D<sub>Q</sub>).
 </p>
 
 <p>
-The auditing mechanism denies a query if answering it, together with previous answers, would uniquely reveal some
-\( x_j \in D \).
+The auditing mechanism denies a query if answering it, together with previous answers,
+would uniquely reveal some x<sub>j</sub> ∈ D.
 </p>
+
 
 <p>
 At first, this seems like a strong safeguard. Unfortunately, it introduces a new problem.
