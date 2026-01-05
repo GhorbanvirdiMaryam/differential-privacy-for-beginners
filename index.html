@@ -14,6 +14,10 @@
       padding: 0 16px;
       color: #111827;
     }
+    p {
+    text-align: justify;
+    hyphens: auto;
+    }
     h1, h2 {
       line-height: 1.25;
     }
@@ -79,7 +83,7 @@ The key lesson is that privacy depends not only on what is released, but also on
 Behavioral data often functions like a fingerprint. Even when identifiers are removed, repeated patterns can allow an observer to recognize individuals across datasets or over time.
 This means that privacy risks are inherent to the structure of the data itself, not just to mistakes in implementation.</p>
 
-<h2>h4. Limits of Query-Based Access</h2>
+<h2>4.Limits of Query-Based Access</h2>
 <h3>Avoiding Data Release: Is Query Access Safer?</h3>
 <p>Given the risks of releasing datasets, a natural alternative is to keep the data private and only allow users to ask queries. Instead of accessing raw records, analysts receive aggregate statistics.
 At first glance, this approach seems much safer. A single number, such as a count or average, does not appear to reveal information about any particular individual.
