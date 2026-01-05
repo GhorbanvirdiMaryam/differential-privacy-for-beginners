@@ -43,115 +43,82 @@ These notes reflect my personal understanding of differential privacy,
 with the goal of explaining the core intuition to undergraduate and graduate students.
 </p>
 
-<h2>Why data privacy is harder than it looks</h2>
+<h2>1. Background and Motivation</h2>
 
+<h3>Why Handling Personal Data Is Risky</h3>
+<p>Modern societies rely heavily on data. Large organizations routinely collect sensitive information about individuals, sometimes including details about our health, location, behavior, or finances. This data plays an important role in scientific research, public policy, and economic planning. At the same time, it creates serious privacy risks.
+To understand why privacy is difficult to guarantee, it helps to look at how data is actually used in practice.
+Many different types of organizations collect and store sensitive information. Government agencies rely on data to understand populations and allocate resources. Hospitals and healthcare providers maintain detailed medical records to support patient care and research. Technology companies collect user data to personalize services and improve products. In all these cases, data is collected with the promise that it will be handled responsibly.</p>
+<h3>Trust Assumptions and Their Limits</h3>
+  <p>This trust is usually based on several assumptions. We assume that the data is collected for a legitimate purpose, that the organization follows ethical guidelines, and that strong security practices are in place to prevent unauthorized access or data breaches.
+However, these assumptions become much weaker once data leaves the organization that originally collected it.</p>
+<h3>When Data Is Shared Beyond Its Original Owner</h3>
+  <p>Data is often shared with third parties. Researchers may request access to study social or medical trends. Government agencies may use data for regulation or public planning. Companies may share data with business partners. Sometimes, datasets are even released publicly in the name of transparency.
+At this point, the original trust relationship no longer applies. We may not know how carefully third parties protect the data, or how they might combine it with other information. Even when everyone involved acts in good faith, privacy risks remain.
+One major source of risk is inference attacks. These attacks do not rely on breaking security systems. Instead, they exploit the fact that seemingly harmless pieces of information can be combined with external data sources to infer sensitive facts about individuals.
+</p>
+
+<h2>2. Reasoning About Privacy</h2>
+<h3>A Simple Model for Thinking About Privacy</h3>
+<p>To reason about these risks, consider a simplified setting. Suppose a dataset contains one record per individual. Each record includes multiple attributes, such as demographic information, health indicators, or behavioral data.
+Even if we remove explicit identifiers like names or Social Security Numbers, the remaining attributes still describe real people. The question is whether those descriptions can be linked back to specific individuals.
+As we will see, the answer is often yes.</p>
+  
+<h2>3. Why Naive Anonymization Fails</h2>
+<h3>Why “Removing Identifiers” Is Not Enough</h3>
+<p>A common intuition is that privacy can be achieved by deleting directly identifying fields. If names and IDs are removed, the dataset may appear anonymous.
+The problem is that identification rarely depends on a single attribute. Instead, it arises from combinations of attributes. ZIP code, age, gender, timestamps, or behavioral patterns may each seem harmless on their own. Together, they can uniquely describe a person.
+These combinations are often called quasi-identifiers. They are not designed to identify individuals, but in practice they often do.</p>
+<h3>Cross-Referencing and Auxiliary Information</h3>
+  <p>This is not a theoretical concern. Real-world datasets have repeatedly shown that removing explicit identifiers does not prevent re-identification when auxiliary information is available.
+One of the most powerful tools for re-identification is cross-referencing. If an attacker has access to an “anonymized” dataset and a second dataset that contains identifying information, shared attributes can be used to link the two.
+Auxiliary information does not need to be secret or sophisticated. Public records, online activity, or even personal knowledge about someone’s behavior may be enough. Once a single record is matched, sensitive attributes associated with that record are revealed.
+The key lesson is that privacy depends not only on what is released, but also on what else is already known.</p>
+<h3>Behavior as an Identifier</h3>
+<p>Another reason anonymization fails is that many datasets capture behavior over time. Movement patterns, purchase histories, ratings, or medical visits tend to be consistent and distinctive.
+Behavioral data often functions like a fingerprint. Even when identifiers are removed, repeated patterns can allow an observer to recognize individuals across datasets or over time.
+This means that privacy risks are inherent to the structure of the data itself, not just to mistakes in implementation.</p>
+
+<h2>h4. Limits of Query-Based Access</h2>
+<h3>Avoiding Data Release: Is Query Access Safer?</h3>
+<p>Given the risks of releasing datasets, a natural alternative is to keep the data private and only allow users to ask queries. Instead of accessing raw records, analysts receive aggregate statistics.
+At first glance, this approach seems much safer. A single number, such as a count or average, does not appear to reveal information about any particular individual.
+However, this intuition is misleading.
+Carefully chosen queries can isolate individuals, especially when queries refer to small subpopulations or when multiple queries are combined. Even when each query seems harmless in isolation, their combined effect may reveal sensitive information.</p>
+<h3>Differencing Attacks on Aggregate Queries</h3>
+<p>One common attack strategy is known as a differencing attack. The idea is simple: ask two similar aggregate queries and subtract their answers.
+If the difference between the answers depends on the data of a single individual, that individual’s private information is revealed. This can happen even when both queries involve large populations and pass basic threshold checks.
+The vulnerability arises from the ability to reason about how individual records affect query outputs.
+</p>
+<h3>Can Auditing Queries Prevent Leakage? When Denial Itself Leaks Information</h3>
 <p>
-When people hear the phrase <em>data privacy</em>, the first idea that usually comes to mind
-is simple: just remove names.
+To address this issue, one might introduce a query auditing mechanism. Such a mechanism monitors past queries and their answers. Before answering a new query, it checks whether the combined information could uniquely determine an individual’s data.
 </p>
 
 <p>
-At an intuitive level, this sounds reasonable. If a dataset does not contain names or IDs,
-how could it possibly point to a real person?
+Formally, consider a dataset
+\( D = (x_1, x_2, \ldots, x_n) \).
+A query specifies a subset of indices
+\( Q \subseteq [n] \)
+and a function \( f \), such as <em>sum</em>, <em>max</em>, or <em>median</em>.
+The answer to the query is \( f(D_Q) \).
 </p>
 
 <p>
-The problem is that real-world data does not behave like a clean spreadsheet from a textbook.
-Real data is rich, messy, and full of patterns. And patterns are often enough to identify
-someone — even when no explicit identifier is present.
-</p>
-
-<h2>Why removing names is not enough</h2>
-
-<p>
-Consider a dataset where each row corresponds to one individual.
-Suppose we remove names and obvious identifiers, but keep attributes such as age,
-ZIP code, gender, or timestamps.
+The auditing mechanism denies a query if answering it, together with previous answers, would uniquely reveal some
+\( x_j \in D \).
 </p>
 
 <p>
-Individually, none of these attributes seems sensitive.
-Together, however, they can be highly distinctive.
-In practice, combinations of seemingly harmless attributes often act like a fingerprint.
+At first, this seems like a strong safeguard. Unfortunately, it introduces a new problem.
+The decision to deny or answer a query depends on the data. As a result, the system’s behavior becomes a side channel.
 </p>
 
-<p>
-Once a record becomes unique, linking it to external information becomes surprisingly easy.
-This is not a theoretical concern — it has happened repeatedly in real data releases,
-including health records, mobility traces, and recommendation datasets.
-</p>
+<h1>What These Failures Tell Us?</h1>
+<p>Across all these examples, privacy loss is indirect. Information is not leaked because the system explicitly reveals a secret. It is leaked because outputs—whether data releases, query answers, or even denials—allow an observer to reason backwards.
+This shows why ad-hoc solutions are fragile. Removing identifiers, limiting access, or manually auditing queries does not provide strong guarantees against inference.
+To reason rigorously about privacy, we need a formal framework that accounts for powerful adversaries and auxiliary information. This motivation leads naturally to differential privacy.</p>
 
-<p>
-The key takeaway is simple:
-<strong>anonymity is not a property of a single column, but of the dataset as a whole.</strong>
-</p>
-
-<h2>When behavior becomes identifying</h2>
-
-<p>
-Another reason anonymization fails is that data often captures behavior over time.
-Human behavior is highly structured and surprisingly consistent.
-</p>
-
-<p>
-The places you visit, the times you are active, or the items you interact with
-tend to form patterns that are difficult to hide.
-Even partial auxiliary information can be enough to match these patterns
-to a supposedly anonymous dataset.
-</p>
-
-<p>
-This means that privacy failures do not require broken encryption or malicious insiders.
-They can arise naturally from the structure of the data itself.
-</p>
-
-<h2>What if we never release the data?</h2>
-
-<p>
-A natural response is to avoid releasing datasets altogether.
-Instead, analysts are allowed to submit queries and only receive aggregate answers.
-</p>
-
-<p>
-At first, this seems safer. After all, a single number does not appear to reveal much
-about any individual.
-</p>
-
-<p>
-The problem is that queries can be carefully designed.
-By asking multiple related questions and comparing the answers,
-it is often possible to isolate the contribution of a single individual.
-</p>
-
-<p>
-Even rules like “only answer queries with large counts” do not fully solve the problem.
-Differences between aggregate answers can still leak sensitive information.
-</p>
-
-<h2>Why these failures matter</h2>
-
-<p>
-Across all these examples, privacy loss happens indirectly.
-Information is not leaked because we explicitly reveal a secret,
-but because released outputs allow someone to reason backwards.
-</p>
-
-<p>
-Once we accept this, it becomes clear that privacy cannot be guaranteed
-by ad-hoc anonymization or manual access control.
-We need a formal notion of privacy that limits what can be inferred about
-any single individual — even in the presence of auxiliary information.
-</p>
-
-<p>
-This motivation leads naturally to differential privacy.
-</p>
-
-<footer>
-<p>
-This page is intentionally minimal. I plan to expand it gradually as my understanding
-and explanations evolve.
-</p>
 </footer>
 
 </body>
