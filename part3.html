@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Part 2 — Reconstruction Attacks</title>
+
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#0f2a3a;
+      --card:#0f172a;
+      --text:#e5e7eb;
+      --muted:#a7b0c0;
+      --accent:#60a5fa;
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,.20), transparent 60%),
+        radial-gradient(1000px 700px at 90% 20%, rgba(34,211,238,.12), transparent 60%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 70px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
+
+    .back{
+      text-decoration:none;
+      color: rgba(229,231,235,.85);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.35);
+    }
+    .back:hover{ border-color: rgba(96,165,250,.35); }
+
+    .card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(15,23,42,.55);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero{
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero .kicker{
+      color: rgba(229,231,235,.75);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin:0 0 6px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: -0.02em;
+    }
+
+    main{
+      padding: 18px 20px 26px;
+    }
+
+    /* Reading typography */
+    p{ line-height: 1.75; margin: 12px 0; color: rgba(229,231,235,.92); text-align: justify; hyphens: auto; }
+    h2,h3,h4,h5{ line-height:1.25; margin: 18px 0 10px; }
+    h2{ font-size: 22px; }
+    h3{ font-size: 18px; color: rgba(229,231,235,.95); }
+    h4{ font-size: 16px; color: rgba(229,231,235,.90); }
+    ul{ margin: 10px 0 10px 22px; }
+    li{ margin: 6px 0; color: rgba(229,231,235,.90); }
+
+    blockquote{
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-left: 3px solid rgba(96,165,250,.55);
+      background: rgba(96,165,250,.10);
+      border-radius: 10px;
+      color: rgba(229,231,235,.92);
+    }
+
+    hr{
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0;
+    }
+
+    .math-block{
+      margin: 10px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 14px;
+      color: rgba(229,231,235,.92);
+      white-space: nowrap;
+    }
+
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      overflow:hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      color: rgba(229,231,235,.92);
+      font-size: 14px;
+    }
+    th{ color: rgba(229,231,235,.95); background: rgba(255,255,255,.05); }
+    tr:last-child td{ border-bottom: none; }
+
+    footer{
+      margin-top: 18px;
+      color: rgba(229,231,235,.60);
+      font-size: 14px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="back" href="index.html">← Back to all parts</a>
+      <div style="color: rgba(229,231,235,.70); font-size:14px;">Differential Privacy for Beginners</div>
+    </div>
+
+    <div class="card">
+      <div class="hero">
+        <p class="kicker">Part 2</p>
+        <h1>Reconstruction Attacks</h1>
+      </div>
+
+      <main>
+        <!-- PASTE YOUR PART 2 TEXT HERE (UNCHANGED) -->
+        <!-- Example: paste the exact text you already have for Section 3 -->
+      </main>
+    </div>
+
+    <footer>© Your notes — GitHub Pages</footer>
+  </div>
+</body>
+</html>
