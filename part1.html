@@ -166,8 +166,79 @@
       </div>
 
       <main>
-        <!-- PASTE YOUR PART 2 TEXT HERE (UNCHANGED) -->
-        <!-- Example: paste the exact text you already have for Section 3 -->
+        <div class="section anchor" id="part1">
+          <h1>Part1: Introduction</h1>
+
+          <h2>1. Background and Motivation</h2>
+
+          <h3>1.1 Why Handling Personal Data Is Risky</h3>
+          <p>Modern societies rely heavily on data. Large organizations routinely collect sensitive information about individuals, sometimes including details about our health, location, behavior, or finances. This data plays an important role in scientific research, public policy, and economic planning. At the same time, it creates serious privacy risks.
+          To understand why privacy is difficult to guarantee, it helps to look at how data is actually used in practice.
+          Many different types of organizations collect and store sensitive information. Government agencies rely on data to understand populations and allocate resources. Hospitals and healthcare providers maintain detailed medical records to support patient care and research. Technology companies collect user data to personalize services and improve products. In all these cases, data is collected with the promise that it will be handled responsibly.</p>
+
+          <h3>1.2 Trust Assumptions and Their Limits</h3>
+          <p>This trust is usually based on several assumptions. We assume that the data is collected for a legitimate purpose, that the organization follows ethical guidelines, and that strong security practices are in place to prevent unauthorized access or data breaches.
+          However, these assumptions become much weaker once data leaves the organization that originally collected it.</p>
+
+          <h3>1.3 When Data Is Shared Beyond Its Original Owner</h3>
+          <p>Data is often shared with third parties. Researchers may request access to study social or medical trends. Government agencies may use data for regulation or public planning. Companies may share data with business partners. Sometimes, datasets are even released publicly in the name of transparency.
+          At this point, the original trust relationship no longer applies. We may not know how carefully third parties protect the data, or how they might combine it with other information. Even when everyone involved acts in good faith, privacy risks remain.
+          One major source of risk is inference attacks. These attacks do not rely on breaking security systems. Instead, they exploit the fact that seemingly harmless pieces of information can be combined with external data sources to infer sensitive facts about individuals.</p>
+
+          <h2>2. Reasoning About Privacy</h2>
+
+          <h3>2.1 A Simple Model for Thinking About Privacy</h3>
+          <p>To reason about these risks, consider a simplified setting. Suppose a dataset contains one record per individual. Each record includes multiple attributes, such as demographic information, health indicators, or behavioral data.
+          Even if we remove explicit identifiers like names or Social Security Numbers, the remaining attributes still describe real people. The question is whether those descriptions can be linked back to specific individuals.
+          As we will see, the answer is often yes.</p>
+
+          <h3>2.2 Why Naive Anonymization Fails</h3>
+
+          <h4>2.2.1 Why “Removing Identifiers” Is Not Enough</h4>
+          <p>A common intuition is that privacy can be achieved by deleting directly identifying fields. If names and IDs are removed, the dataset may appear anonymous.
+          The problem is that identification rarely depends on a single attribute. Instead, it arises from combinations of attributes. ZIP code, age, gender, timestamps, or behavioral patterns may each seem harmless on their own. Together, they can uniquely describe a person.
+          These combinations are often called quasi-identifiers. They are not designed to identify individuals, but in practice they often do.</p>
+
+          <h4>2.2.2 Cross-Referencing and Auxiliary Information</h4>
+          <p>This is not a theoretical concern. Real-world datasets have repeatedly shown that removing explicit identifiers does not prevent re-identification when auxiliary information is available.
+          One of the most powerful tools for re-identification is cross-referencing. If an attacker has access to an “anonymized” dataset and a second dataset that contains identifying information, shared attributes can be used to link the two.
+          Auxiliary information does not need to be secret or sophisticated. Public records, online activity, or even personal knowledge about someone’s behavior may be enough. Once a single record is matched, sensitive attributes associated with that record are revealed.
+          The key lesson is that privacy depends not only on what is released, but also on what else is already known.</p>
+
+          <h4>2.2.3 Behavior as an Identifier</h4>
+          <p>Another reason anonymization fails is that many datasets capture behavior over time. Movement patterns, purchase histories, ratings, or medical visits tend to be consistent and distinctive.
+          Behavioral data often functions like a fingerprint. Even when identifiers are removed, repeated patterns can allow an observer to recognize individuals across datasets or over time.
+          This means that privacy risks are inherent to the structure of the data itself, not just to mistakes in implementation.</p>
+
+          <h3>2.3 Limits of Query-Based Access</h3>
+
+          <h4>2.3.1 Avoiding Data Release: Is Query Access Safer?</h4>
+          <p>Given the risks of releasing datasets, a natural alternative is to keep the data private and only allow users to ask queries. Instead of accessing raw records, analysts receive aggregate statistics.
+          At first glance, this approach seems much safer. A single number, such as a count or average, does not appear to reveal information about any particular individual.
+          However, this intuition is misleading.
+          Carefully chosen queries can isolate individuals, especially when queries refer to small subpopulations or when multiple queries are combined. Even when each query seems harmless in isolation, their combined effect may reveal sensitive information.</p>
+
+          <h4>2.3.2 Differencing Attacks on Aggregate Queries</h4>
+          <p>One common attack strategy is known as a differencing attack. The idea is simple: ask two similar aggregate queries and subtract their answers.
+          If the difference between the answers depends on the data of a single individual, that individual’s private information is revealed. This can happen even when both queries involve large populations and pass basic threshold checks.
+          The vulnerability arises from the ability to reason about how individual records affect query outputs.</p>
+
+          <h4>Can Auditing Queries Prevent Leakage? When Denial Itself Leaks Information</h4>
+          <p>To address this issue, one might introduce a query auditing mechanism. Such a mechanism monitors past queries and their answers. Before answering a new query, it checks whether the combined information could uniquely determine an individual’s data.</p>
+
+          <p>Formally, consider a dataset D = (x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub>).
+          A query specifies a subset of indices Q ⊆ [n] and a function f,
+          such as <em>sum</em>, <em>max</em>, or <em>median</em>.
+          The answer to the query is f(D<sub>Q</sub>).</p>
+
+          <p>The auditing mechanism denies a query if answering it, together with previous answers,
+          would uniquely reveal some x<sub>j</sub> ∈ D.</p>
+
+          <p>At first, this seems like a strong safeguard. Unfortunately, it introduces a new problem.
+          The decision to deny or answer a query depends on the data. As a result, the system’s behavior becomes a side channel.</p>
+        </div>
+
+        <hr>
       </main>
     </div>
 
