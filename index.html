@@ -7,273 +7,263 @@
 
   <style>
     :root{
-      --text:#111827;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --bg:#ffffff;
-      --soft:#f9fafb;
-      --soft2:#f3f4f6;
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --radius: 16px;
-      --green:#10b981;
+      --bg1:#0b1220;
+      --bg2:#0f2a3a;
+      --card:#0f172a;
+      --card2:#111c36;
+      --text:#e5e7eb;
+      --muted:#a7b0c0;
+      --accent:#60a5fa;
+      --border: rgba(255,255,255,.10);
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 18px;
     }
 
-    html { scroll-behavior: smooth; }
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+
     body{
+      margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height: 1.75;
-      color: var(--text);
-      background: var(--bg);
-      margin: 0;
-    }
-    .wrap{
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 28px 16px 70px;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,.20), transparent 60%),
+        radial-gradient(1000px 700px at 90% 20%, rgba(34,211,238,.12), transparent 60%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100vh;
     }
 
-    /* Header */
-    .hero{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 22px 18px;
-      background: linear-gradient(180deg, var(--soft), #fff);
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
+    .wrap{
+      max-width:1100px;
+      margin: 0 auto;
+      padding: 44px 18px 80px;
     }
-    .hero h1{
-      margin: 0 0 8px;
-      font-size: 2rem;
-      line-height: 1.2;
+
+    header{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 22px;
+    }
+
+    .title{
+      max-width: 760px;
+    }
+
+    h1{
+      font-size: clamp(28px, 3vw, 40px);
+      margin:0 0 10px;
       letter-spacing: -0.02em;
     }
-    .hero p{
-      margin: 0;
-      color: var(--muted);
-      max-width: 75ch;
+
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      max-width: 70ch;
     }
 
-    /* Cards grid */
-    .cards{
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin: 18px 0 22px;
-    }
-    @media (max-width: 900px){
-      .cards{ grid-template-columns: 1fr; }
-    }
-    .card{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: #fff;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .card:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 14px 34px rgba(0,0,0,0.10);
-    }
-    .card-top{
-      padding: 14px 14px 10px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .thumb{
-      width: 54px;
-      height: 54px;
-      border-radius: 14px;
-      background: var(--soft2);
-      border: 1px solid var(--border);
-      flex: 0 0 auto;
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-    .card-title{
-      margin: 0;
-      font-size: 1.05rem;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      font-weight: 700;
-    }
-    .card-sub{
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-    .card-actions{
-      padding: 0 14px 14px;
-    }
-    .btn{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      border-radius: 999px;
+    .hint{
+      margin-top: 10px;
+      color: rgba(229,231,235,.70);
+      font-size: 14px;
       padding: 10px 12px;
-      font-size: 0.95rem;
-      border: 1px solid var(--green);
-      background: var(--green);
-      color: #fff;
-      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(15,23,42,.35);
+      backdrop-filter: blur(6px);
     }
 
-    /* Content panel */
-    .panel{
+    .grid{
+      margin-top: 26px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:16px;
+    }
+
+    .card{
+      grid-column: span 4;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      background: #fff;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
       box-shadow: var(--shadow);
-      overflow: hidden;
+      overflow:hidden;
+      text-decoration:none;
+      color:inherit;
+      position:relative;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
     }
-    .panel-header{
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      background: var(--soft);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+
+    .card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(96,165,250,.35);
+      background: linear-gradient(180deg, rgba(96,165,250,.10), rgba(255,255,255,.03));
     }
-    .panel-header h2{
-      margin: 0;
-      font-size: 1.1rem;
+
+    .cover{
+      width:100%;
+      aspect-ratio: 16 / 9;
+      background: rgba(255,255,255,.05);
+      display:none; 
+    }
+
+    .cover img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .content{
+      padding: 16px 16px 18px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: rgba(229,231,235,.80);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,.50);
+      margin-bottom: 10px;
+    }
+
+    .card h2{
+      margin: 6px 0 8px;
+      font-size: 18px;
+      line-height: 1.35;
       letter-spacing: -0.01em;
     }
-    .panel-header .hint{
+
+    .card p{
+      margin:0;
       color: var(--muted);
-      font-size: 0.95rem;
-    }
-    .panel-body{
-      padding: 18px;
+      line-height: 1.6;
+      font-size: 14px;
     }
 
-    /* Your content styling */
-    p { margin: 1em 0; text-align: justify; hyphens: auto; }
-    h1,h2,h3,h4,h5 { line-height: 1.25; margin: 1.2em 0 0.4em; }
-    hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
-
-    blockquote{
-      margin: 14px 0;
-      padding: 12px 14px;
-      border-left: 4px solid var(--border);
-      background: var(--soft);
-      border-radius: 10px;
-    }
-    blockquote p{ margin: 0.4em 0; }
-
-    .math-block{
-      margin: 12px 0;
-      padding: 12px 14px;
-      background: var(--soft);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow-x: auto;
-      font-variant-numeric: tabular-nums;
+    .meta{
+      margin-top: 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      color: rgba(229,231,235,.70);
+      font-size: 13px;
     }
 
-    /* Anchor offset so headings don't hide under browser UI */
-    .anchor { scroll-margin-top: 18px; }
+    .go{
+      color: var(--accent);
+      font-weight: 600;
+    }
 
     footer{
-      margin-top: 26px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      text-align: center;
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: rgba(229,231,235,.60);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .card{ grid-column: span 6; }
+    }
+    @media (max-width: 640px){
+      .card{ grid-column: span 12; }
+      .hint{ width: 100%; text-align:center; }
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="hero">
-      <h1>Differential Privacy for Beginners</h1>
-      <p>These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.</p>
-    </div>
-
-    <!-- Cards -->
-    <div class="cards">
-      <a class="card" href="#part1">
-        <div class="card-top">
-          <div class="thumb">P1</div>
-          <div>
-            <p class="card-title">Part 1: Introduction</p>
-            <p class="card-sub">Background, motivation, and why naive anonymization fails</p>
-          </div>
-        </div>
-        <div class="card-actions">
-          <span class="btn">Open Part 1</span>
-        </div>
-      </a>
-
-      <a class="card" href="#part2">
-        <div class="card-top">
-          <div class="thumb">P2</div>
-          <div>
-            <p class="card-title">Part 2: Reconstruction</p>
-            <p class="card-sub">How statistics can reconstruct private data</p>
-          </div>
-        </div>
-        <div class="card-actions">
-          <span class="btn">Open Part 2</span>
-        </div>
-      </a>
-
-      <a class="card" href="#part3">
-        <div class="card-top">
-          <div class="thumb">P3</div>
-          <div>
-            <p class="card-title">Part 3: (Next)</p>
-            <p class="card-sub">Add your next section here</p>
-          </div>
-        </div>
-        <div class="card-actions">
-          <span class="btn">Open Part 3</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- Content -->
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Content</h2>
-        <div class="hint">Click a Part card to jump to that section</div>
+    <header>
+      <div class="title">
+        <h1>Differential Privacy for Beginners</h1>
+        <p class="subtitle">
+          These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.
+        </p>
       </div>
+      <div class="hint">Click a Part card to open it</div>
+    </header>
 
-      <div class="panel-body">
-        <section id="part1" class="anchor">
-          <!-- PASTE PART 1 HERE (your exact HTML) -->
-          <h1>Part1: Introduction</h1>
-          <p><em>(Paste your Part 1 content here. If you see this sentence, it means Part 1 is still empty.)</em></p>
-        </section>
+    <section class="grid" aria-label="Parts">
 
-        <hr>
+      <!-- Part 1 -->
+      <a class="card" href="part1.html">
+        <div class="cover" data-img="covers/part1.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 1</div>
+          <h2>Introduction</h2>
+          <p>Background, motivation, and common failures</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
 
-        <section id="part2" class="anchor">
-          <!-- PASTE PART 2 HERE (your exact HTML) -->
-          <h2>3. Reconstruction Attacks</h2>
-          <p><em>(Paste your Part 2 content here. If you see this sentence, it means Part 2 is still empty.)</em></p>
-        </section>
+      <!-- Part 2 -->
+      <a class="card" href="part2.html">
+        <div class="cover" data-img="covers/part2.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 2</div>
+          <h2>Reconstruction Attacks</h2>
+          <p>How statistics can reveal the dataset</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
 
-        <hr>
+      <!-- Part 3 (placeholder) -->
+      <a class="card" href="part3.html">
+        <div class="cover" data-img="covers/part3.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 3</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
 
-        <section id="part3" class="anchor">
-          <!-- PASTE PART 3 HERE -->
-          <h1>Part 3: (Next)</h1>
-          <p><em>(Paste your next part here when ready.)</em></p>
-        </section>
-      </div>
-    </div>
+      <!--  Part 4  Part 12  -->
 
-    <footer>© Your notes — GitHub Pages</footer>
+    </section>
+
+    <footer>
+      © Your notes — GitHub Pages
+    </footer>
   </div>
+
+  <script>
+    document.querySelectorAll('.cover[data-img]').forEach((cover) => {
+      const src = cover.getAttribute('data-img');
+      if (!src) return;
+
+      const img = new Image();
+      img.src = src;
+      img.alt = "";
+
+      img.onload = () => {
+        cover.appendChild(img);
+        cover.style.display = "block";
+      };
+
+      img.onerror = () => {
+        // عکس نداریم → هیچ چیزی نمایش داده نشه
+        cover.style.display = "none";
+      };
+    });
+  </script>
 </body>
 </html>
