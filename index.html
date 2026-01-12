@@ -15,6 +15,7 @@
       --soft2:#f3f4f6;
       --shadow: 0 10px 30px rgba(0,0,0,0.08);
       --radius: 16px;
+      --green:#10b981;
     }
 
     html { scroll-behavior: smooth; }
@@ -25,14 +26,13 @@
       background: var(--bg);
       margin: 0;
     }
-
     .wrap{
       max-width: 1050px;
       margin: 0 auto;
-      padding: 28px 16px 60px;
+      padding: 28px 16px 70px;
     }
 
-    /* Main title header */
+    /* Header */
     .hero{
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -53,31 +53,31 @@
       max-width: 75ch;
     }
 
-    /* Cards grid like your screenshot */
+    /* Cards grid */
     .cards{
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
-      margin-bottom: 18px;
+      margin: 18px 0 22px;
     }
     @media (max-width: 900px){
       .cards{ grid-template-columns: 1fr; }
     }
-
     .card{
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: #fff;
       box-shadow: var(--shadow);
       overflow: hidden;
-      cursor: pointer;
       transition: transform 0.12s ease, box-shadow 0.12s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
     }
     .card:hover{
       transform: translateY(-2px);
       box-shadow: 0 14px 34px rgba(0,0,0,0.10);
     }
-
     .card-top{
       padding: 14px 14px 10px;
       display: flex;
@@ -94,13 +94,15 @@
       display: grid;
       place-items: center;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
     .card-title{
       margin: 0;
       font-size: 1.05rem;
       line-height: 1.2;
       letter-spacing: -0.01em;
+      font-weight: 700;
     }
     .card-sub{
       margin: 4px 0 0;
@@ -108,4 +110,170 @@
       font-size: 0.95rem;
     }
     .card-actions{
-      padding: 0 1
+      padding: 0 14px 14px;
+    }
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border: 1px solid var(--green);
+      background: var(--green);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* Content panel */
+    .panel{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-header{
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .panel-header h2{
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+    }
+    .panel-header .hint{
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .panel-body{
+      padding: 18px;
+    }
+
+    /* Your content styling */
+    p { margin: 1em 0; text-align: justify; hyphens: auto; }
+    h1,h2,h3,h4,h5 { line-height: 1.25; margin: 1.2em 0 0.4em; }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
+
+    blockquote{
+      margin: 14px 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--border);
+      background: var(--soft);
+      border-radius: 10px;
+    }
+    blockquote p{ margin: 0.4em 0; }
+
+    .math-block{
+      margin: 12px 0;
+      padding: 12px 14px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Anchor offset so headings don't hide under browser UI */
+    .anchor { scroll-margin-top: 18px; }
+
+    footer{
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Differential Privacy for Beginners</h1>
+      <p>These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+      <a class="card" href="#part1">
+        <div class="card-top">
+          <div class="thumb">P1</div>
+          <div>
+            <p class="card-title">Part 1: Introduction</p>
+            <p class="card-sub">Background, motivation, and why naive anonymization fails</p>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="btn">Open Part 1</span>
+        </div>
+      </a>
+
+      <a class="card" href="#part2">
+        <div class="card-top">
+          <div class="thumb">P2</div>
+          <div>
+            <p class="card-title">Part 2: Reconstruction</p>
+            <p class="card-sub">How statistics can reconstruct private data</p>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="btn">Open Part 2</span>
+        </div>
+      </a>
+
+      <a class="card" href="#part3">
+        <div class="card-top">
+          <div class="thumb">P3</div>
+          <div>
+            <p class="card-title">Part 3: (Next)</p>
+            <p class="card-sub">Add your next section here</p>
+          </div>
+        </div>
+        <div class="card-actions">
+          <span class="btn">Open Part 3</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Content -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Content</h2>
+        <div class="hint">Click a Part card to jump to that section</div>
+      </div>
+
+      <div class="panel-body">
+        <section id="part1" class="anchor">
+          <!-- PASTE PART 1 HERE (your exact HTML) -->
+          <h1>Part1: Introduction</h1>
+          <p><em>(Paste your Part 1 content here. If you see this sentence, it means Part 1 is still empty.)</em></p>
+        </section>
+
+        <hr>
+
+        <section id="part2" class="anchor">
+          <!-- PASTE PART 2 HERE (your exact HTML) -->
+          <h2>3. Reconstruction Attacks</h2>
+          <p><em>(Paste your Part 2 content here. If you see this sentence, it means Part 2 is still empty.)</em></p>
+        </section>
+
+        <hr>
+
+        <section id="part3" class="anchor">
+          <!-- PASTE PART 3 HERE -->
+          <h1>Part 3: (Next)</h1>
+          <p><em>(Paste your next part here when ready.)</em></p>
+        </section>
+      </div>
+    </div>
+
+    <footer>© Your notes — GitHub Pages</footer>
+  </div>
+</body>
+</html>
