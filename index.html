@@ -6,509 +6,106 @@
   <title>Differential Privacy for Beginners</title>
 
   <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      line-height: 1.7;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 16px;
-      color: #111827;
+    :root{
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --bg:#ffffff;
+      --soft:#f9fafb;
+      --soft2:#f3f4f6;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --radius: 16px;
     }
-    p {
-    text-align: justify;
-    hyphens: auto;
+
+    html { scroll-behavior: smooth; }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      margin: 0;
     }
-    h1, h2 {
-      line-height: 1.25;
+
+    .wrap{
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
     }
-    h1 {
-      margin-bottom: 0.2em;
+
+    /* Main title header */
+    .hero{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 22px 18px;
+      background: linear-gradient(180deg, var(--soft), #fff);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
     }
-    .subtitle {
-      color: #6b7280;
-      margin-bottom: 2em;
+    .hero h1{
+      margin: 0 0 8px;
+      font-size: 2rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
     }
-    p {
-      margin: 1em 0;
+    .hero p{
+      margin: 0;
+      color: var(--muted);
+      max-width: 75ch;
     }
-    footer {
-      margin-top: 4em;
-      color: #6b7280;
-      font-size: 0.95em;
+
+    /* Cards grid like your screenshot */
+    .cards{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
     }
-  </style>
-</head>
-
-<body>
-
-<h1>Differential Privacy for Beginners</h1>
-<p class="subtitle">
-These notes reflect my personal understanding of differential privacy,
-with the goal of explaining the core intuition to students.
-</p>
-
-
-<h1>Part1: Introduction</h1>
-  <h2>1. Background and Motivation</h2>
-
-<h3>1.1 Why Handling Personal Data Is Risky</h3>
-<p>Modern societies rely heavily on data. Large organizations routinely collect sensitive information about individuals, sometimes including details about our health, location, behavior, or finances. This data plays an important role in scientific research, public policy, and economic planning. At the same time, it creates serious privacy risks.
-To understand why privacy is difficult to guarantee, it helps to look at how data is actually used in practice.
-Many different types of organizations collect and store sensitive information. Government agencies rely on data to understand populations and allocate resources. Hospitals and healthcare providers maintain detailed medical records to support patient care and research. Technology companies collect user data to personalize services and improve products. In all these cases, data is collected with the promise that it will be handled responsibly.</p>
-<h3>1.2 Trust Assumptions and Their Limits</h3>
-  <p>This trust is usually based on several assumptions. We assume that the data is collected for a legitimate purpose, that the organization follows ethical guidelines, and that strong security practices are in place to prevent unauthorized access or data breaches.
-However, these assumptions become much weaker once data leaves the organization that originally collected it.</p>
-<h3>1.3 When Data Is Shared Beyond Its Original Owner</h3>
-  <p>Data is often shared with third parties. Researchers may request access to study social or medical trends. Government agencies may use data for regulation or public planning. Companies may share data with business partners. Sometimes, datasets are even released publicly in the name of transparency.
-At this point, the original trust relationship no longer applies. We may not know how carefully third parties protect the data, or how they might combine it with other information. Even when everyone involved acts in good faith, privacy risks remain.
-One major source of risk is inference attacks. These attacks do not rely on breaking security systems. Instead, they exploit the fact that seemingly harmless pieces of information can be combined with external data sources to infer sensitive facts about individuals.
-</p>
-
-<h2>2. Reasoning About Privacy</h2>
-  <h3>2.1 A Simple Model for Thinking About Privacy</h3>
-  <p>To reason about these risks, consider a simplified setting. Suppose a dataset contains one record per individual. Each record includes multiple attributes, such as demographic information, health indicators, or behavioral data.
-    Even if we remove explicit identifiers like names or Social Security Numbers, the remaining attributes still describe real people. The question is whether those descriptions can be linked back to specific individuals.
-    As we will see, the answer is often yes.</p>
-  
-  <h3>2.2 Why Naive Anonymization Fails</h3>
-  <h4>2.2.1 Why “Removing Identifiers” Is Not Enough</h4>
-  <p>A common intuition is that privacy can be achieved by deleting directly identifying fields. If names and IDs are removed, the dataset may appear anonymous.
-  The problem is that identification rarely depends on a single attribute. Instead, it arises from combinations of attributes. ZIP code, age, gender, timestamps, or behavioral patterns may each seem harmless on their own. Together, they can uniquely describe a person.
-  These combinations are often called quasi-identifiers. They are not designed to identify individuals, but in practice they often do.</p>
-  <h4>2.2.2 Cross-Referencing and Auxiliary Information</h4>
-  <p>This is not a theoretical concern. Real-world datasets have repeatedly shown that removing explicit identifiers does not prevent re-identification when auxiliary information is available.
-  One of the most powerful tools for re-identification is cross-referencing. If an attacker has access to an “anonymized” dataset and a second dataset that contains identifying information, shared attributes can be used to link the two.
-  Auxiliary information does not need to be secret or sophisticated. Public records, online activity, or even personal knowledge about someone’s behavior may be enough. Once a single record is matched, sensitive attributes associated with that record are revealed.
-  The key lesson is that privacy depends not only on what is released, but also on what else is already known.</p>
-  <h4>2.2.3 Behavior as an Identifier</h4>
-  <p>Another reason anonymization fails is that many datasets capture behavior over time. Movement patterns, purchase histories, ratings, or medical visits tend to be consistent and distinctive.
-  Behavioral data often functions like a fingerprint. Even when identifiers are removed, repeated patterns can allow an observer to recognize individuals across datasets or over time.
-  This means that privacy risks are inherent to the structure of the data itself, not just to mistakes in implementation.</p>
-  
-  <h3>2.3 Limits of Query-Based Access</h3>
-  <h4>2.3.1 Avoiding Data Release: Is Query Access Safer?</h4>
-  <p>Given the risks of releasing datasets, a natural alternative is to keep the data private and only allow users to ask queries. Instead of accessing raw records, analysts receive aggregate statistics.
-  At first glance, this approach seems much safer. A single number, such as a count or average, does not appear to reveal information about any particular individual.
-  However, this intuition is misleading.
-  Carefully chosen queries can isolate individuals, especially when queries refer to small subpopulations or when multiple queries are combined. Even when each query seems harmless in isolation, their combined effect may reveal sensitive information.</p>
-  <h4>2.3.2 Differencing Attacks on Aggregate Queries</h4>
-  <p>One common attack strategy is known as a differencing attack. The idea is simple: ask two similar aggregate queries and subtract their answers.
-  If the difference between the answers depends on the data of a single individual, that individual’s private information is revealed. This can happen even when both queries involve large populations and pass basic threshold checks.
-  The vulnerability arises from the ability to reason about how individual records affect query outputs.
-  </p>
-  <h4>Can Auditing Queries Prevent Leakage? When Denial Itself Leaks Information</h4>
-  <p>
-  To address this issue, one might introduce a query auditing mechanism. Such a mechanism monitors past queries and their answers. Before answering a new query, it checks whether the combined information could uniquely determine an individual’s data.
-  </p>
-
-  <p>
-  Formally, consider a dataset D = (x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub>).
-  A query specifies a subset of indices Q ⊆ [n] and a function f,
-  such as <em>sum</em>, <em>max</em>, or <em>median</em>.
-  The answer to the query is f(D<sub>Q</sub>).
-  </p>
-
-  <p>
-  The auditing mechanism denies a query if answering it, together with previous answers,
-  would uniquely reveal some x<sub>j</sub> ∈ D.
-  </p>
-  
-  
-  <p>
-  At first, this seems like a strong safeguard. Unfortunately, it introduces a new problem.
-  The decision to deny or answer a query depends on the data. As a result, the system’s behavior becomes a side channel.
-  </p>
-  <hr>
-  
-<h2>3. Reconstruction Attacks</h2>
-  <h3>3.1 Reconstructing Private Data from Statistics</h3>
-
-  <p>A reconstruction attack is one of the strongest ways to show that privacy has failed.</p>
-
-  <p>In this type of attack, an adversary is able to recover the sensitive data of one or more people with very high accuracy. Sometimes the attacker can even recover the entire dataset. These attacks prove that a system does not truly keep personal information private, even if it only releases statistics.</p>
-
-  <p>The idea is simple:<br>
-  if the released numbers restrict the dataset enough, then only a few datasets—or even only one—can be consistent with them. When that happens, the attacker has effectively learned the original data.</p>
-
-
-  <h4>3.1.1 A Classic Logic Puzzle: The Census Interview</h4>
-
-  <p>Imagine a census worker visiting a home and asking:</p>
-
-  <blockquote><p>“How many children do you have, and how old are they?”</p></blockquote>
-
-  <p>The woman replies:</p>
-
-  <blockquote><p>“I have three daughters. The product of their ages is 36.”</p></blockquote>
-
-  <p>The census worker says:</p>
-
-  <blockquote><p>“That is not enough information.”</p></blockquote>
-
-  <p>The woman adds:</p>
-
-  <blockquote><p>“The sum of their ages is the same as the house number next door.”</p></blockquote>
-
-  <p>The census worker walks outside, checks the number, comes back, and says:</p>
-
-  <blockquote><p>“I still cannot determine their ages.”</p></blockquote>
-
-  <p>The woman then says:</p>
-
-  <blockquote><p>“I have an oldest daughter.”</p></blockquote>
-
-  <p>At that point, the census worker says:</p>
-
-  <blockquote><p>“Now I know all their ages.”</p></blockquote>
-
-  <p>How did this happen?</p>
-
-  <hr>
-  <h4>Step 1 — Using the product</h4>
-
-  <p>Let the daughters’ ages be<br>
-  ( 0 &le; a &le; b &le; c ).</p>
-
-  <p>From the first answer:</p>
-
-  <div class="math-block">
-    a &middot; b &middot; c = 36.
-  </div>
-
-  <p>The possible triples ((a,b,c)) that satisfy this are:</p>
-
-  <div class="math-block">
-    (1,1,36), (1,2,18), (1,3,12), (1,4,9), (1,6,6), (2,2,9), (2,3,6), (3,3,4).
-  </div>
-
-  <p>So the first answer reduces the possibilities to 8.</p>
-
-  <hr>
-
-  <h4>Step 2 — Using the sum</h4>
-
-  <p>Now consider all solutions for the sums (a+b+c):</p>
-
-  <p>The census taker checked the house number but still could not decide.<br>
-  That means the sum must not be unique.</p>
-
-  <p>The only duplicated sum is:</p>
-
-  <div class="math-block">
-    a+b+c = 13,
-  </div>
-  <p>which occurs for:</p>
-
-  <div class="math-block">
-    (1,6,6) &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; (2,2,9).
-  </div>
-
-  <p>So now only two possibilities remain.</p>
-
-  <hr>
-
-  <h4>Step 3 — Using “oldest daughter”</h4>
-
-  <p>The woman then says she has an <strong>oldest</strong> daughter.<br>
-  That means the largest age is strictly greater than the others.</p>
-
-  <p>So ((1,6,6)) is impossible, because there is no unique oldest.<br>
-  We must have:</p>
-
-  <div class="math-block">
-    (a,b,c) = (2,2,9).
-  </div>
-
-  <p>This puzzle shows how partial information can be combined to reconstruct private data.</p>
-
-  <hr>
-<h4>3.1.2 Reconstructing from Aggregated Census Tables</h4>
-
-  <p>Now consider a simplified census release.<br>
-  Suppose we are told that there are <strong>three men</strong> in a block. Let their ages be:</p>
-
-  <div class="math-block">
-    a &le; b &le; c.
-  </div>
-
-  <p>We are given two statistics:</p>
-
-  <ul>
-    <li>The <strong>median</strong> age is 30</li>
-    <li>The <strong>mean</strong> age is 44</li>
-  </ul>
-
-  <p>From the median:</p>
-
-  <div class="math-block">
-    b = 30.
-  </div>
-   <p>From the mean:</p>
-
-  <div class="math-block">
-    (a + b + c) / 3 = 44.
-  </div>
-
-  <p>Substitute (b=30):</p>
-
-  <div class="math-block">
-    (a + 30 + c) / 3 = 44 &nbsp;&nbsp;&rArr;&nbsp;&nbsp; a + c = 102.
-  </div>
-
-  <p>So all solutions must satisfy:</p>
-
-  <div class="math-block">
-    0 &le; a &le; 30 &le; c &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; a + c = 102.
-  </div>
-
-  <p>This gives 30 possible age triples:</p>
-
-  <div class="math-block">
-    (a,30,c) = (1,30,101), (2,30,100), &hellip;, (30,30,72).
-  </div>
-
-  <p>So a dataset that originally had about (100^3 = 1,000,000) possibilities is now reduced to just <strong>30</strong>.</p>
-
-
-   <h4>Adding one more statistic</h4>
-
-  <p>Suppose we are told that the <strong>mean age of two of the men is 28</strong>.</p>
-
-  <p>The possible pairwise means are:</p>
-
-  <div class="math-block">
-    (a+b)/2, &nbsp;&nbsp;&nbsp; (a+c)/2, &nbsp;&nbsp;&nbsp; (b+c)/2.
-  </div>
-
-  <p>We check:</p>
-
-  <div class="math-block">
-    (b+c)/2 &ge; (30+30)/2 = 30 &gt; 28,
-  </div>
-
-  <div class="math-block">
-    (a+c)/2 = 102/2 = 51 &gt; 28.
-  </div>
-
-  <p>So the only option is:</p>
-  <div class="math-block">
-    (a+b)/2 = 28.
-  </div>
-
-  <p>Substitute (b=30):</p>
-
-  <div class="math-block">
-    (a+30)/2 = 28 &nbsp;&nbsp;&rArr;&nbsp;&nbsp; a=26.
-  </div>
-
-  <p>Then:</p>
-
-  <div class="math-block">
-    c = 102 - 26 = 76.
-  </div>
-
-  <p>So the three ages are:</p>
-
-  <div class="math-block">
-    (26, 30, 76).
-  </div>
-
-  <p>The individual ages have been reconstructed exactly.</p>
-
-  <hr>
-  <h4>3.1.3 Why Reconstruction Means Privacy Has Failed</h4>
-
-  <p>These examples show the same pattern.</p>
-
-  <p>There exists a hidden dataset:</p>
-
-  <div class="math-block">
-    D = (x<sub>1</sub>, &hellip;, x<sub>n</sub>).
-  </div>
-
-  <p>The system releases statistics:</p>
-
-  <div class="math-block">
-    f<sub>1</sub>(D), f<sub>2</sub>(D), &hellip;, f<sub>k</sub>(D),
-  </div>
-
-  <p>possibly with small noise:</p>
-
-  <div class="math-block">
-    a<sub>1</sub> &approx; f<sub>1</sub>(D), &hellip;, a<sub>k</sub> &approx; f<sub>k</sub>(D).
-  </div>
-   <p>These values impose constraints on (D).<br>
-  If only one dataset—or a very small number—satisfies those constraints, then the attacker has essentially recovered the data.</p>
-
-  <p>This leads to the following concept.</p>
-
-  <hr>
-
-  <h3>Definition (Blatant Non-Privacy)</h3>
-
-  <p>A system is <strong>blatantly non-private</strong> if there exists an attacker who, given the released outputs, can recover the underlying sensitive dataset with very high accuracy (for example, 99%).</p>
-
-
-  <hr>
-
-  <h5>A Formal Example of Complete Data Recovery</h5>
-
-  <p>Now we give a precise mathematical example of a reconstruction attack.</p>
-
-  <p>Assume the dataset contains one sensitive bit for each person:</p>
-
-  <div class="math-block">
-    D = (x<sub>1</sub>, x<sub>2</sub>, &hellip;, x<sub>n</sub>) &in; {0,1}<sup>n</sup>.
-  </div>
-  <p>Here, (x<sub>i</sub> = 1) might mean “this person has some property” (for example, a disease), and (x<sub>i</sub> = 0) means they do not.</p>
-
-  <p>We allow an analyst to ask <strong>counting queries</strong>.<br>
-  Each query selects a subset of people:</p>
-
-  <div class="math-block">
-    Q &subseteq; [n].
-  </div>
-
-  <p>The true answer to a query is:</p>
-
-  <div class="math-block">
-    a(D,Q) = &sum;<sub>i &in; Q</sub> x<sub>i</sub>.
-  </div>
-
-  <p>To protect privacy, the system does not return the exact answer.<br>
-  Instead it adds noise:</p>
-
-  <div class="math-block">
-    &tilde;a<sub>Q</sub> = a(D,Q) + noise.
-  </div>
-  <p>Whether this protects privacy depends on how large the noise is and how many queries are allowed.</p>
-
-  <hr>
-
-  <h3>Theorem Small Noise Allows Full Reconstruction</h3>
-
-  <p>If the noise added to every query is at most</p>
-
-  <div class="math-block">
-    n/400,
-  </div>
-
-  <p>then an attacker can reconstruct the dataset (D) with <strong>99% accuracy</strong>.</p>
-
-  <hr>
-
-  <h4><strong>How the attack works</strong></h4>
-
-  <p>The attacker proceeds in two phases.</p>
-  <h4>Phase 1 — Ask all queries</h4>
-
-  <p>The attacker asks <strong>all possible queries</strong>:</p>
-
-  <div class="math-block">
-    Q &subseteq; [n].
-  </div>
-
-  <p>For each one, they receive a noisy answer (&tilde;a<sub>Q</sub>).</p>
-
-  <hr>
-
-  <h4>Phase 2 — Find a dataset that fits the answers</h4>
-
-  <p>The attacker searches for a dataset</p>
-  <div class="math-block">
-    &tilde;D = (&tilde;x<sub>1</sub>, &hellip;, &tilde;x<sub>n</sub>) &in; {0,1}<sup>n</sup>
-  </div>
-
-  <p>that satisfies:</p>
-
-  <div class="math-block">
-    | &tilde;a<sub>Q</sub> - a(&tilde;D, Q) | &le; n/400
-    &nbsp;&nbsp;&nbsp; for all &nbsp;&nbsp;&nbsp; Q &subseteq; [n].
-  </div>
-  <p>Such a dataset must exist, because the real dataset (D) itself satisfies this condition.</p>
-
-  <p>The attacker simply tries all (2<sup>n</sup>) possible datasets until finding one that matches the noisy answers.</p>
-
-  <hr>
-
-  <h4><strong>Why this recovers the true data</strong></h4>
-
-  <p>Consider two special queries:</p>
-
-  <p><strong>Query (Q<sub>0</sub>):</strong> all people with (x<sub>i</sub> = 0)</p>
-
-  <div class="math-block">
-    Q<sub>0</sub> = { i : x<sub>i</sub> = 0 }.
-  </div>
-
-  <p>So</p>
-
-  <div class="math-block">
-    a(D,Q<sub>0</sub>) = 0.
-  </div>
-
-  <p><strong>Query (Q<sub>1</sub>):</strong> all people with (x<sub>i</sub> = 1)</p>
-
-  <div class="math-block">
-    Q<sub>1</sub> = { i : x<sub>i</sub> = 1 } = [n] \ Q<sub>0</sub>.
-  </div>
-
-  <hr>
-
-  <p>From the noisy answers we get:</p>
-
-  <div class="math-block">
-    | &tilde;a<sub>Q<sub>0</sub></sub> - a(&tilde;D, Q<sub>0</sub>) | &le; n/400,
-  </div>
-
-  <p>and also</p>
-
-  <div class="math-block">
-    | a(D,Q<sub>0</sub>) - &tilde;a<sub>Q<sub>0</sub></sub> | &le; n/400.
-  </div>
-
-  <p>By the triangle inequality:</p>
-
-  <div class="math-block">
-    | a(D,Q<sub>0</sub>) - a(&tilde;D, Q<sub>0</sub>) |
-    &le; 2n/400 = n/200.
-  </div>
-
-  <p>This means:</p>
-
-  <blockquote>
-    <p>the number of positions where (x<sub>i</sub>=0) but (&tilde;x<sub>i</sub>=1) is at most (n/200).</p>
-  </blockquote>
-
-  <p>A similar argument using (Q<sub>1</sub>) shows:</p>
-
-  <blockquote>
-    <p>the number of positions where (x<sub>i</sub>=1) but (&tilde;x<sub>i</sub>=0) is also at most (n/200).</p>
-  </blockquote>
-
-  <p>So overall:</p>
-
-  <div class="math-block">
-    &tilde;D differs from D in at most
-    n/200 + n/200 = n/100 entries.
-  </div>
-
-  <p>That means the attacker recovers <strong>at least 99%</strong> of all bits correctly.</p>
-
-  <hr>
-
-  <h4><strong>What this means</strong></h4>
-
-  <p>Even though noise was added, it was not enough.<br>
-  With enough queries and small noise, the entire dataset becomes visible.</p>
-
-  <p>This is a formal proof that:</p>
-
-  <blockquote>
-    <p>releasing too many noisy statistics can completely destroy privacy.</p>
-  </blockquote>
-</div>
-</footer>
-
-</body>
-</html>
+    @media (max-width: 900px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+    }
+
+    .card-top{
+      padding: 14px 14px 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .thumb{
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: var(--soft2);
+      border: 1px solid var(--border);
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .card-title{
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+    .card-sub{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .card-actions{
+      padding: 0 1
