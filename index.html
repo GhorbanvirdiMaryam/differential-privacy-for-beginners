@@ -236,8 +236,123 @@
         </div>
       </a>
 
-      <!-- برای Part 4 تا Part 12 همین ساختار رو کپی کن -->
+       <!-- Part 4 (placeholder) -->
+      <a class="card" href="part4.html">
+        <div class="cover" data-img="covers/part3.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 4</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
 
+       <!-- Part 5 (placeholder) -->
+      <a class="card" href="part5.html">
+        <div class="cover" data-img="covers/part5.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 5</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 6 (placeholder) -->
+      <a class="card" href="part3.html">
+        <div class="cover" data-img="covers/part6.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 6</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 7 (placeholder) -->
+      <a class="card" href="part7.html">
+        <div class="cover" data-img="covers/part7.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 7</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 8 (placeholder) -->
+      <a class="card" href="part8.html">
+        <div class="cover" data-img="covers/part8.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 8</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 9 (placeholder) -->
+      <a class="card" href="part9.html">
+        <div class="cover" data-img="covers/part9.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 9</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 10 (placeholder) -->
+      <a class="card" href="part10.html">
+        <div class="cover" data-img="covers/part10.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 10</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 11 (placeholder) -->
+      <a class="card" href="part11.html">
+        <div class="cover" data-img="covers/part11.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 11</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+
+       <!-- Part 12 (placeholder) -->
+      <a class="card" href="part12.html">
+        <div class="cover" data-img="covers/part12.jpg"></div>
+        <div class="content">
+          <div class="pill">Part 12</div>
+          <h2>(Next)</h2>
+          <p>Coming soon</p>
+          <div class="meta">
+            <span>Read</span><span class="go">Open →</span>
+          </div>
+        </div>
+      </a>
+      
     </section>
 
     <footer>
@@ -246,7 +361,6 @@
   </div>
 
   <script>
-    // اگر عکس وجود داشت: cover را نمایش بده؛ اگر نبود: اصلاً نمایش نده (بدون آیکن خراب)
     document.querySelectorAll('.cover[data-img]').forEach((cover) => {
       const src = cover.getAttribute('data-img');
       if (!src) return;
@@ -261,7 +375,6 @@
       };
 
       img.onerror = () => {
-        // عکس نداریم → هیچ چیزی نمایش داده نشه
         cover.style.display = "none";
       };
     });
