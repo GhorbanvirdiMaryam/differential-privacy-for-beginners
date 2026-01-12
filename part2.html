@@ -166,8 +166,398 @@
       </div>
 
       <main>
-        <!-- PASTE YOUR PART 2 TEXT HERE (UNCHANGED) -->
-        <!-- Example: paste the exact text you already have for Section 3 -->
+        <div class="section anchor" id="part2">
+          <h2>3. Reconstruction Attacks</h2>
+
+          <h3>3.1 Reconstructing Private Data from Statistics</h3>
+
+          <p>A reconstruction attack is one of the strongest ways to show that privacy has failed.</p>
+
+          <p>In this type of attack, an adversary is able to recover the sensitive data of one or more people with very high accuracy. Sometimes the attacker can even recover the entire dataset. These attacks prove that a system does not truly keep personal information private, even if it only releases statistics.</p>
+
+          <p>The idea is simple:<br>
+          if the released numbers restrict the dataset enough, then only a few datasets—or even only one—can be consistent with them. When that happens, the attacker has effectively learned the original data.</p>
+
+          <h4>3.1.1 A Classic Logic Puzzle: The Census Interview</h4>
+
+          <p>Imagine a census worker visiting a home and asking:</p>
+          <blockquote><p>“How many children do you have, and how old are they?”</p></blockquote>
+
+          <p>The woman replies:</p>
+          <blockquote><p>“I have three daughters. The product of their ages is 36.”</p></blockquote>
+
+          <p>The census worker says:</p>
+          <blockquote><p>“That is not enough information.”</p></blockquote>
+
+          <p>The woman adds:</p>
+          <blockquote><p>“The sum of their ages is the same as the house number next door.”</p></blockquote>
+
+          <p>The census worker walks outside, checks the number, comes back, and says:</p>
+          <blockquote><p>“I still cannot determine their ages.”</p></blockquote>
+
+          <p>The woman then says:</p>
+          <blockquote><p>“I have an oldest daughter.”</p></blockquote>
+
+          <p>At that point, the census worker says:</p>
+          <blockquote><p>“Now I know all their ages.”</p></blockquote>
+
+          <p>How did this happen?</p>
+
+          <hr>
+
+          <h4>Step 1 — Using the product</h4>
+
+          <p>Let the daughters’ ages be<br>
+          ( 0 &le; a &le; b &le; c ).</p>
+
+          <p>From the first answer:</p>
+
+          <div class="math-block">
+            a &middot; b &middot; c = 36.
+          </div>
+
+          <p>The possible triples ((a,b,c)) that satisfy this are:</p>
+
+          <div class="math-block">
+            (1,1,36), (1,2,18), (1,3,12), (1,4,9), (1,6,6), (2,2,9), (2,3,6), (3,3,4).
+          </div>
+
+          <p>So the first answer reduces the possibilities to 8.</p>
+
+          <hr>
+
+          <h4>Step 2 — Using the sum</h4>
+
+          <p>Now consider all solutions for the sums (a+b+c):</p>
+
+          <p>The census taker checked the house number but still could not decide.<br>
+          That means the sum must not be unique.</p>
+
+          <p>The only duplicated sum is:</p>
+
+          <div class="math-block">
+            a+b+c = 13,
+          </div>
+
+          <p>which occurs for:</p>
+
+          <div class="math-block">
+            (1,6,6) &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; (2,2,9).
+          </div>
+
+          <p>So now only two possibilities remain.</p>
+
+          <hr>
+
+          <h4>Step 3 — Using “oldest daughter”</h4>
+
+          <p>The woman then says she has an <strong>oldest</strong> daughter.<br>
+          That means the largest age is strictly greater than the others.</p>
+
+          <p>So ((1,6,6)) is impossible, because there is no unique oldest.<br>
+          We must have:</p>
+
+          <div class="math-block">
+            (a,b,c) = (2,2,9).
+          </div>
+
+          <p>This puzzle shows how partial information can be combined to reconstruct private data.</p>
+
+          <hr>
+
+          <h4>3.1.2 Reconstructing from Aggregated Census Tables</h4>
+
+          <p>Now consider a simplified census release.<br>
+          Suppose we are told that there are <strong>three men</strong> in a block. Let their ages be:</p>
+
+          <div class="math-block">
+            a &le; b &le; c.
+          </div>
+
+          <p>We are given two statistics:</p>
+
+          <ul>
+            <li>The <strong>median</strong> age is 30</li>
+            <li>The <strong>mean</strong> age is 44</li>
+          </ul>
+
+          <p>From the median:</p>
+
+          <div class="math-block">
+            b = 30.
+          </div>
+
+          <p>From the mean:</p>
+
+          <div class="math-block">
+            (a + b + c) / 3 = 44.
+          </div>
+
+          <p>Substitute (b=30):</p>
+
+          <div class="math-block">
+            (a + 30 + c) / 3 = 44 &nbsp;&nbsp;&rArr;&nbsp;&nbsp; a + c = 102.
+          </div>
+
+          <p>So all solutions must satisfy:</p>
+
+          <div class="math-block">
+            0 &le; a &le; 30 &le; c &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; a + c = 102.
+          </div>
+
+          <p>This gives 30 possible age triples:</p>
+
+          <div class="math-block">
+            (a,30,c) = (1,30,101), (2,30,100), &hellip;, (30,30,72).
+          </div>
+
+          <p>So a dataset that originally had about (100^3 = 1,000,000) possibilities is now reduced to just <strong>30</strong>.</p>
+
+          <h4>Adding one more statistic</h4>
+
+          <p>Suppose we are told that the <strong>mean age of two of the men is 28</strong>.</p>
+
+          <p>The possible pairwise means are:</p>
+
+          <div class="math-block">
+            (a+b)/2, &nbsp;&nbsp;&nbsp; (a+c)/2, &nbsp;&nbsp;&nbsp; (b+c)/2.
+          </div>
+
+          <p>We check:</p>
+
+          <div class="math-block">
+            (b+c)/2 &ge; (30+30)/2 = 30 &gt; 28,
+          </div>
+
+          <div class="math-block">
+            (a+c)/2 = 102/2 = 51 &gt; 28.
+          </div>
+
+          <p>So the only option is:</p>
+
+          <div class="math-block">
+            (a+b)/2 = 28.
+          </div>
+
+          <p>Substitute (b=30):</p>
+
+          <div class="math-block">
+            (a+30)/2 = 28 &nbsp;&nbsp;&rArr;&nbsp;&nbsp; a=26.
+          </div>
+
+          <p>Then:</p>
+
+          <div class="math-block">
+            c = 102 - 26 = 76.
+          </div>
+
+          <p>So the three ages are:</p>
+
+          <div class="math-block">
+            (26, 30, 76).
+          </div>
+
+          <p>The individual ages have been reconstructed exactly.</p>
+
+          <hr>
+
+          <h4>3.1.3 Why Reconstruction Means Privacy Has Failed</h4>
+
+          <p>These examples show the same pattern.</p>
+
+          <p>There exists a hidden dataset:</p>
+
+          <div class="math-block">
+            D = (x<sub>1</sub>, &hellip;, x<sub>n</sub>).
+          </div>
+
+          <p>The system releases statistics:</p>
+
+          <div class="math-block">
+            f<sub>1</sub>(D), f<sub>2</sub>(D), &hellip;, f<sub>k</sub>(D),
+          </div>
+
+          <p>possibly with small noise:</p>
+
+          <div class="math-block">
+            a<sub>1</sub> &approx; f<sub>1</sub>(D), &hellip;, a<sub>k</sub> &approx; f<sub>k</sub>(D).
+          </div>
+
+          <p>These values impose constraints on (D).<br>
+          If only one dataset—or a very small number—satisfies those constraints, then the attacker has essentially recovered the data.</p>
+
+          <p>This leads to the following concept.</p>
+
+          <hr>
+
+          <h3>Definition (Blatant Non-Privacy)</h3>
+
+          <p>A system is <strong>blatantly non-private</strong> if there exists an attacker who, given the released outputs, can recover the underlying sensitive dataset with very high accuracy (for example, 99%).</p>
+
+          <hr>
+
+          <h5>A Formal Example of Complete Data Recovery</h5>
+
+          <p>Now we give a precise mathematical example of a reconstruction attack.</p>
+
+          <p>Assume the dataset contains one sensitive bit for each person:</p>
+
+          <div class="math-block">
+            D = (x<sub>1</sub>, x<sub>2</sub>, &hellip;, x<sub>n</sub>) &in; {0,1}<sup>n</sup>.
+          </div>
+
+          <p>Here, (x<sub>i</sub> = 1) might mean “this person has some property” (for example, a disease), and (x<sub>i</sub> = 0) means they do not.</p>
+
+          <p>We allow an analyst to ask <strong>counting queries</strong>.<br>
+          Each query selects a subset of people:</p>
+
+          <div class="math-block">
+            Q &subseteq; [n].
+          </div>
+
+          <p>The true answer to a query is:</p>
+
+          <div class="math-block">
+            a(D,Q) = &sum;<sub>i &in; Q</sub> x<sub>i</sub>.
+          </div>
+
+          <p>To protect privacy, the system does not return the exact answer.<br>
+          Instead it adds noise:</p>
+
+          <div class="math-block">
+            &tilde;a<sub>Q</sub> = a(D,Q) + noise.
+          </div>
+
+          <p>Whether this protects privacy depends on how large the noise is and how many queries are allowed.</p>
+
+          <hr>
+
+          <h3>Theorem Small Noise Allows Full Reconstruction</h3>
+
+          <p>If the noise added to every query is at most</p>
+
+          <div class="math-block">
+            n/400,
+          </div>
+
+          <p>then an attacker can reconstruct the dataset (D) with <strong>99% accuracy</strong>.</p>
+
+          <hr>
+
+          <h4><strong>How the attack works</strong></h4>
+
+          <p>The attacker proceeds in two phases.</p>
+
+          <h4>Phase 1 — Ask all queries</h4>
+
+          <p>The attacker asks <strong>all possible queries</strong>:</p>
+
+          <div class="math-block">
+            Q &subseteq; [n].
+          </div>
+
+          <p>For each one, they receive a noisy answer (&tilde;a<sub>Q</sub>).</p>
+
+          <hr>
+
+          <h4>Phase 2 — Find a dataset that fits the answers</h4>
+
+          <p>The attacker searches for a dataset</p>
+
+          <div class="math-block">
+            &tilde;D = (&tilde;x<sub>1</sub>, &hellip;, &tilde;x<sub>n</sub>) &in; {0,1}<sup>n</sup>
+          </div>
+
+          <p>that satisfies:</p>
+
+          <div class="math-block">
+            | &tilde;a<sub>Q</sub> - a(&tilde;D, Q) | &le; n/400
+            &nbsp;&nbsp;&nbsp; for all &nbsp;&nbsp;&nbsp; Q &subseteq; [n].
+          </div>
+
+          <p>Such a dataset must exist, because the real dataset (D) itself satisfies this condition.</p>
+
+          <p>The attacker simply tries all (2<sup>n</sup>) possible datasets until finding one that matches the noisy answers.</p>
+
+          <hr>
+
+          <h4><strong>Why this recovers the true data</strong></h4>
+
+          <p>Consider two special queries:</p>
+
+          <p><strong>Query (Q<sub>0</sub>):</strong> all people with (x<sub>i</sub> = 0)</p>
+
+          <div class="math-block">
+            Q<sub>0</sub> = { i : x<sub>i</sub> = 0 }.
+          </div>
+
+          <p>So</p>
+
+          <div class="math-block">
+            a(D,Q<sub>0</sub>) = 0.
+          </div>
+
+          <p><strong>Query (Q<sub>1</sub>):</strong> all people with (x<sub>i</sub> = 1)</p>
+
+          <div class="math-block">
+            Q<sub>1</sub> = { i : x<sub>i</sub> = 1 } = [n] \ Q<sub>0</sub>.
+          </div>
+
+          <hr>
+
+          <p>From the noisy answers we get:</p>
+
+          <div class="math-block">
+            | &tilde;a<sub>Q<sub>0</sub></sub> - a(&tilde;D, Q<sub>0</sub>) | &le; n/400,
+          </div>
+
+          <p>and also</p>
+
+          <div class="math-block">
+            | a(D,Q<sub>0</sub>) - &tilde;a<sub>Q<sub>0</sub></sub> | &le; n/400.
+          </div>
+
+          <p>By the triangle inequality:</p>
+
+          <div class="math-block">
+            | a(D,Q<sub>0</sub>) - a(&tilde;D, Q<sub>0</sub>) |
+            &le; 2n/400 = n/200.
+          </div>
+
+          <p>This means:</p>
+
+          <blockquote>
+            <p>the number of positions where (x<sub>i</sub>=0) but (&tilde;x<sub>i</sub>=1) is at most (n/200).</p>
+          </blockquote>
+
+          <p>A similar argument using (Q<sub>1</sub>) shows:</p>
+
+          <blockquote>
+            <p>the number of positions where (x<sub>i</sub>=1) but (&tilde;x<sub>i</sub>=0) is also at most (n/200).</p>
+          </blockquote>
+
+          <p>So overall:</p>
+
+          <div class="math-block">
+            &tilde;D differs from D in at most
+            n/200 + n/200 = n/100 entries.
+          </div>
+
+          <p>That means the attacker recovers <strong>at least 99%</strong> of all bits correctly.</p>
+
+          <hr>
+
+          <h4><strong>What this means</strong></h4>
+
+          <p>Even though noise was added, it was not enough.<br>
+          With enough queries and small noise, the entire dataset becomes visible.</p>
+
+          <p>This is a formal proof that:</p>
+
+          <blockquote>
+            <p>releasing too many noisy statistics can completely destroy privacy.</p>
+          </blockquote>
+        </div>
       </main>
     </div>
 
