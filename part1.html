@@ -3,246 +3,246 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Part 1 —  Introduction</title>
+  <title>Part 1 — Introduction to DP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    :root{
-      --bg1:#0b1220;
-      --bg2:#0f2a3a;
-      --card:#0f172a;
-      --text:#e5e7eb;
-      --muted:#a7b0c0;
-      --accent:#60a5fa;
-      --border: rgba(255,255,255,.12);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,.20), transparent 60%),
-        radial-gradient(1000px 700px at 90% 20%, rgba(34,211,238,.12), transparent 60%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100vh;
+    :root {
+      --bg-color: #fcfcfc;
+      --paper-color: #ffffff;
+      --text-main: #2d3436;
+      --text-muted: #636e72;
+      --accent: #b8d8d8; /* همان سبز-آبی ملایم سایت اصلی */
+      --border-color: #eeeeee;
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
     }
 
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 16px 70px;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background-color: var(--bg-color);
+      line-height: 1.8;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-
-    .back{
-      text-decoration:none;
-      color: rgba(229,231,235,.85);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(15,23,42,.35);
-    }
-    .back:hover{ border-color: rgba(96,165,250,.35); }
-
-    .card{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(15,23,42,.55);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .hero{
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .hero .kicker{
-      color: rgba(229,231,235,.75);
-      font-size: 13px;
+    /* --- نوار بالایی هماهنگ با سایت اصلی --- */
+    .top-nav {
+      background-color: #d1e3e3;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: .04em;
-      margin:0 0 6px;
+      letter-spacing: 1.5px;
     }
 
-    .hero h1{
-      margin:0;
-      font-size: clamp(24px, 3vw, 34px);
-      letter-spacing: -0.02em;
+    .top-nav a {
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    main{
-      padding: 18px 20px 26px;
+    /* --- کانتینر اصلی محتوا --- */
+    .article-wrap {
+      max-width: 800px; /* عرض بهینه برای خواندن مقالات طولانی */
+      margin: 60px auto;
+      padding: 0 20px;
     }
 
-    /* Reading typography */
-    p{ line-height: 1.75; margin: 12px 0; color: rgba(229,231,235,.92); text-align: justify; hyphens: auto; }
-    h2,h3,h4,h5{ line-height:1.25; margin: 18px 0 10px; }
-    h2{ font-size: 22px; }
-    h3{ font-size: 18px; color: rgba(229,231,235,.95); }
-    h4{ font-size: 16px; color: rgba(229,231,235,.90); }
-    ul{ margin: 10px 0 10px 22px; }
-    li{ margin: 6px 0; color: rgba(229,231,235,.90); }
-
-    blockquote{
-      margin: 12px 0;
-      padding: 12px 14px;
-      border-left: 3px solid rgba(96,165,250,.55);
-      background: rgba(96,165,250,.10);
-      border-radius: 10px;
-      color: rgba(229,231,235,.92);
+    /* --- هدر مقاله --- */
+    .article-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
 
-    hr{
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0;
+    .article-header .kicker {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
     }
 
-    .math-block{
-      margin: 10px 0;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255,255,255,.04);
+    .article-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 5vw, 48px);
+      margin: 0;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .article-header .divider {
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 30px auto;
+    }
+
+    /* --- تایپوگرافی متن --- */
+    main {
+      background: var(--paper-color);
+      padding: 20px 0;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      margin-top: 50px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    h3 {
+      font-family: var(--font-sans);
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 35px;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 17px;
+      color: #3d3d3d;
+      text-align: justify;
+    }
+
+    /* استایل خاص برای فرمول‌های ریاضی */
+    .math-box {
+      background: #f8f9fa;
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      margin: 30px 0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 15px;
+      border-radius: 4px;
       overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 14px;
-      color: rgba(229,231,235,.92);
-      white-space: nowrap;
     }
 
-    table{
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      overflow:hidden;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+    /* استایل نقل‌قول‌ها */
+    blockquote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 20px;
+      color: var(--text-muted);
+      margin: 40px 0;
+      padding: 0 30px;
+      border-left: none;
+      text-align: center;
+      line-height: 1.6;
     }
-    th, td{
-      padding: 10px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      color: rgba(229,231,235,.92);
-      font-size: 14px;
-    }
-    th{ color: rgba(229,231,235,.95); background: rgba(255,255,255,.05); }
-    tr:last-child td{ border-bottom: none; }
 
-    footer{
-      margin-top: 18px;
-      color: rgba(229,231,235,.60);
-      font-size: 14px;
-      text-align:center;
+    footer {
+      margin: 80px 0 40px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* ریسپانسیو */
+    @media (max-width: 600px) {
+      .article-wrap { margin: 30px auto; }
+      .top-nav { padding: 10px 20px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <a class="back" href="index.html">← Back to all parts</a>
-      <div style="color: rgba(229,231,235,.70); font-size:14px;">Differential Privacy for Beginners</div>
-    </div>
 
-    <div class="card">
-      <div class="hero">
-        <p class="kicker">Part 1</p>
-        <h1>Introduction</h1>
-      </div>
+  <div class="top-nav">
+    <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Archive</a>
+    <span>Differential Privacy for Beginners</span>
+  </div>
 
-      <main>
-        <div class="section anchor" id="part1">
-          <h1>Part1: Introduction</h1>
+  <article class="article-wrap">
+    <header class="article-header">
+      <span class="kicker">Chapter One</span>
+      <h1>An Introduction to Formal Privacy</h1>
+      <div class="divider"></div>
+    </header>
 
-          <h2>1. Background and Motivation</h2>
+    <main>
+      <section id="background">
+        <h2>1. Background and Motivation</h2>
+        
+        <h3>1.1 Why Handling Personal Data Is Risky</h3>
+        <p>
+          Modern societies rely heavily on data. Large organizations routinely collect sensitive information about individuals, sometimes including details about our health, location, behavior, or finances. This data plays an important role in scientific research, public policy, and economic planning. At the same time, it creates serious privacy risks.
+        </p>
 
-          <h3>1.1 Why Handling Personal Data Is Risky</h3>
-          <p>Modern societies rely heavily on data. Large organizations routinely collect sensitive information about individuals, sometimes including details about our health, location, behavior, or finances. This data plays an important role in scientific research, public policy, and economic planning. At the same time, it creates serious privacy risks.
-          To understand why privacy is difficult to guarantee, it helps to look at how data is actually used in practice.
-          Many different types of organizations collect and store sensitive information. Government agencies rely on data to understand populations and allocate resources. Hospitals and healthcare providers maintain detailed medical records to support patient care and research. Technology companies collect user data to personalize services and improve products. In all these cases, data is collected with the promise that it will be handled responsibly.</p>
+        <h3>1.2 Trust Assumptions and Their Limits</h3>
+        <p>
+          This trust is usually based on several assumptions. We assume that the data is collected for a legitimate purpose, that the organization follows ethical guidelines, and that strong security practices are in place. However, these assumptions become much weaker once data leaves the organization that originally collected it.
+        </p>
 
-          <h3>1.2 Trust Assumptions and Their Limits</h3>
-          <p>This trust is usually based on several assumptions. We assume that the data is collected for a legitimate purpose, that the organization follows ethical guidelines, and that strong security practices are in place to prevent unauthorized access or data breaches.
-          However, these assumptions become much weaker once data leaves the organization that originally collected it.</p>
+        <blockquote>
+          "Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet."
+        </blockquote>
 
-          <h3>1.3 When Data Is Shared Beyond Its Original Owner</h3>
-          <p>Data is often shared with third parties. Researchers may request access to study social or medical trends. Government agencies may use data for regulation or public planning. Companies may share data with business partners. Sometimes, datasets are even released publicly in the name of transparency.
-          At this point, the original trust relationship no longer applies. We may not know how carefully third parties protect the data, or how they might combine it with other information. Even when everyone involved acts in good faith, privacy risks remain.
-          One major source of risk is inference attacks. These attacks do not rely on breaking security systems. Instead, they exploit the fact that seemingly harmless pieces of information can be combined with external data sources to infer sensitive facts about individuals.</p>
+        <h3>1.3 When Data Is Shared</h3>
+        <p>
+          Data is often shared with third parties. Researchers may request access to study social or medical trends. Even when everyone involved acts in good faith, privacy risks remain. One major source of risk is <strong>inference attacks</strong>.
+        </p>
+      </section>
 
-          <h2>2. Reasoning About Privacy</h2>
+      <section id="reasoning">
+        <h2>2. Reasoning About Privacy</h2>
+        
+        <h3>2.1 A Simple Model</h3>
+        <p>
+          To reason about these risks, consider a simplified setting. Suppose a dataset contains one record per individual. Each record includes multiple attributes. Even if we remove explicit identifiers like names, the remaining attributes still describe real people.
+        </p>
 
-          <h3>2.1 A Simple Model for Thinking About Privacy</h3>
-          <p>To reason about these risks, consider a simplified setting. Suppose a dataset contains one record per individual. Each record includes multiple attributes, such as demographic information, health indicators, or behavioral data.
-          Even if we remove explicit identifiers like names or Social Security Numbers, the remaining attributes still describe real people. The question is whether those descriptions can be linked back to specific individuals.
-          As we will see, the answer is often yes.</p>
+        <h3>2.2 Why Naive Anonymization Fails</h3>
+        <h4>2.2.1 The Myth of "Removing Identifiers"</h4>
+        <p>
+          A common intuition is that privacy can be achieved by deleting directly identifying fields. The problem is that identification rarely depends on a single attribute. ZIP code, age, gender—together, they can uniquely describe a person. These are known as <em>quasi-identifiers</em>.
+        </p>
 
-          <h3>2.2 Why Naive Anonymization Fails</h3>
-
-          <h4>2.2.1 Why “Removing Identifiers” Is Not Enough</h4>
-          <p>A common intuition is that privacy can be achieved by deleting directly identifying fields. If names and IDs are removed, the dataset may appear anonymous.
-          The problem is that identification rarely depends on a single attribute. Instead, it arises from combinations of attributes. ZIP code, age, gender, timestamps, or behavioral patterns may each seem harmless on their own. Together, they can uniquely describe a person.
-          These combinations are often called quasi-identifiers. They are not designed to identify individuals, but in practice they often do.</p>
-
-          <h4>2.2.2 Cross-Referencing and Auxiliary Information</h4>
-          <p>This is not a theoretical concern. Real-world datasets have repeatedly shown that removing explicit identifiers does not prevent re-identification when auxiliary information is available.
-          One of the most powerful tools for re-identification is cross-referencing. If an attacker has access to an “anonymized” dataset and a second dataset that contains identifying information, shared attributes can be used to link the two.
-          Auxiliary information does not need to be secret or sophisticated. Public records, online activity, or even personal knowledge about someone’s behavior may be enough. Once a single record is matched, sensitive attributes associated with that record are revealed.
-          The key lesson is that privacy depends not only on what is released, but also on what else is already known.</p>
-
-          <h4>2.2.3 Behavior as an Identifier</h4>
-          <p>Another reason anonymization fails is that many datasets capture behavior over time. Movement patterns, purchase histories, ratings, or medical visits tend to be consistent and distinctive.
-          Behavioral data often functions like a fingerprint. Even when identifiers are removed, repeated patterns can allow an observer to recognize individuals across datasets or over time.
-          This means that privacy risks are inherent to the structure of the data itself, not just to mistakes in implementation.</p>
-
-          <h3>2.3 Limits of Query-Based Access</h3>
-
-          <h4>2.3.1 Avoiding Data Release: Is Query Access Safer?</h4>
-          <p>Given the risks of releasing datasets, a natural alternative is to keep the data private and only allow users to ask queries. Instead of accessing raw records, analysts receive aggregate statistics.
-          At first glance, this approach seems much safer. A single number, such as a count or average, does not appear to reveal information about any particular individual.
-          However, this intuition is misleading.
-          Carefully chosen queries can isolate individuals, especially when queries refer to small subpopulations or when multiple queries are combined. Even when each query seems harmless in isolation, their combined effect may reveal sensitive information.</p>
-
-          <h4>2.3.2 Differencing Attacks on Aggregate Queries</h4>
-          <p>One common attack strategy is known as a differencing attack. The idea is simple: ask two similar aggregate queries and subtract their answers.
-          If the difference between the answers depends on the data of a single individual, that individual’s private information is revealed. This can happen even when both queries involve large populations and pass basic threshold checks.
-          The vulnerability arises from the ability to reason about how individual records affect query outputs.</p>
-
-          <h4>Can Auditing Queries Prevent Leakage? When Denial Itself Leaks Information</h4>
-          <p>To address this issue, one might introduce a query auditing mechanism. Such a mechanism monitors past queries and their answers. Before answering a new query, it checks whether the combined information could uniquely determine an individual’s data.</p>
-
-          <p>Formally, consider a dataset D = (x<sub>1</sub>, x<sub>2</sub>, …, x<sub>n</sub>).
-          A query specifies a subset of indices Q ⊆ [n] and a function f,
-          such as <em>sum</em>, <em>max</em>, or <em>median</em>.
-          The answer to the query is f(D<sub>Q</sub>).</p>
-
-          <p>The auditing mechanism denies a query if answering it, together with previous answers,
-          would uniquely reveal some x<sub>j</sub> ∈ D.</p>
-
-          <p>At first, this seems like a strong safeguard. Unfortunately, it introduces a new problem.
-          The decision to deny or answer a query depends on the data. As a result, the system’s behavior becomes a side channel.</p>
+        <div class="math-box">
+          D = (x₁, x₂, ..., xₙ) <br>
+          Query Q ⊆ [n] → Answer = f(D_Q)
         </div>
 
-        <hr>
-      </main>
-    </div>
+        <h4>2.2.2 Cross-Referencing</h4>
+        <p>
+          Real-world datasets have repeatedly shown that removing explicit identifiers does not prevent re-identification when auxiliary information is available. One of the most powerful tools for re-identification is cross-referencing.
+        </p>
 
-    <footer>© Your notes — GitHub Pages</footer>
-  </div>
+        <h3>2.3 Limits of Query-Based Access</h3>
+        <p>
+          Carefully chosen queries can isolate individuals, especially when queries refer to small subpopulations. A common strategy is the <strong>differencing attack</strong>: asking two similar queries and subtracting their answers.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 — Differential Privacy Series — Maryam Ghorbanvirdi
+    </footer>
+  </article>
+
 </body>
 </html>
