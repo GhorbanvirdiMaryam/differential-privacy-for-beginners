@@ -175,8 +175,8 @@
 <body>
 
   <header>
-    <h1>Differential Privacy</h1>
-    <p class="subtitle">An ode to everything data, privacy and finding beauty in algorithms.</p>
+    <h1>Differential Privacy for Beginners</h1>
+    <p class="subtitle">Privacy is rarely lost in one fell swoop. It is usually eroded over time, little bits dissolving almost imperceptibly until we finally begin to notice how much is gone.</p>
     <div class="divider"></div>
   </header>
 
@@ -189,20 +189,20 @@
   </div>
 
   <footer>
-    © Differential Privacy for Beginners — 2024
+    © Differential Privacy for Beginners — 2026
   </footer>
 
   <script>
     const grid = document.getElementById('slider');
     const parts = [
-      { title: "Introduction", desc: "Background and motivation", img: "part1.jpeg" },
-      { title: "Reconstruction Attacks", desc: "How statistics reveal data", img: "part2.jpeg" },
+      { title: "Introduction", desc: "Background and motivation", img: "part1.png" },
+      { title: "Reconstruction Attacks", desc: "How statistics reveal data", img: "part2.png" },
       // بقیه پارت‌ها (۳ تا ۱۲)
     ];
 
     // ایجاد ۱۲ کارت
     for (let i = 1; i <= 12; i++) {
-      const data = parts[i-1] || { title: "(Next)", desc: "Coming soon", img: `part${i}.jpeg` };
+      const data = parts[i-1] || { title: "(Next)", desc: "Coming soon", img: `part${i}.png` };
       grid.innerHTML += `
         <a class="card" href="part${i}.html">
           <div class="cover">
