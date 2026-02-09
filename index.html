@@ -7,232 +7,222 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #070b14;
-      --bg-accent: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.5);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent-color: #38bdf8;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --radius: 16px;
+      --bg-color: #0b1220;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --text-color: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --border: rgba(255, 255, 255, 0.1);
     }
 
     * { box-sizing: border-box; }
     
     body {
       margin: 0;
-      padding: 0;
       font-family: "Inter", sans-serif;
-      color: var(--text-main);
-      background-color: var(--bg-dark);
-      /* Elegant gradient background */
-      background: 
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
-        var(--bg-dark);
+      color: var(--text-color);
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0b1220 100%);
       min-height: 100vh;
-      line-height: 1.5;
+      /* حالا کل صفحه اسکرول می‌شود */
+      overflow-y: auto; 
     }
 
-    .container {
-      max-width: 1200px;
+    .wrap {
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 60px 24px;
+      padding: 40px 20px;
     }
 
-    /* Header Styling - No background box as requested */
+    /* حذف مستطیل رنگی دور تایتل و هماهنگ شدن با پس‌زمینه */
     header {
-      margin-bottom: 60px;
+      margin-bottom: 40px;
     }
 
-    .header-content {
+    .header-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: flex-start;
       flex-wrap: wrap;
       gap: 20px;
     }
 
     h1 {
-      font-size: clamp(32px, 5vw, 48px);
-      font-weight: 700;
-      margin: 0 0 16px 0;
-      letter-spacing: -0.03em;
+      font-size: clamp(28px, 4vw, 42px);
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
       background: linear-gradient(to right, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
-      font-size: 18px;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0;
+      color: var(--muted);
+      max-width: 650px;
+      font-size: 17px;
+      line-height: 1.6;
     }
 
-    .hint-badge {
+    .hint {
       padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      border-radius: 100px;
-      font-size: 13px;
-      color: var(--accent-color);
-      font-weight: 500;
+      font-size: 14px;
+      color: var(--accent);
     }
 
-    /* The Grid - Now naturally scrollable with the page */
+    /* گرید کارت‌ها */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
 
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 18px;
       text-decoration: none;
       color: inherit;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
     }
 
     .card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      background: rgba(30, 41, 59, 0.8);
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .cover-img {
+    /* بخش عکس‌ها - طبق کد اصلی شما */
+    .cover {
       width: 100%;
-      aspect-ratio: 16/9;
-      background: #1e293b;
-      display: none; /* Only shown if image loads */
+      aspect-ratio: 16 / 9;
+      background: rgba(255,255,255,.05);
+      display: none; /* توسط اسکریپت پایین نمایش داده می‌شود */
+    }
+
+    .cover img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-    }
-
-    .card-body {
-      padding: 24px;
-    }
-
-    .part-tag {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent-color);
-      margin-bottom: 12px;
       display: block;
     }
 
-    h2 {
-      font-size: 20px;
-      margin: 0 0 10px 0;
+    .content {
+      padding: 20px;
+    }
+
+    .pill {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 8px;
       font-weight: 600;
     }
 
-    .card p {
-      color: var(--text-muted);
-      font-size: 15px;
-      margin: 0 0 20px 0;
-      min-height: 45px;
+    h2 {
+      margin: 0 0 8px;
+      font-size: 19px;
     }
 
-    .card-footer {
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .meta {
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 500;
-      border-top: 1px solid var(--border-color);
-      padding-top: 16px;
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
     }
 
-    .btn-text {
-      color: var(--accent-color);
-    }
-
-    footer {
-      margin-top: 80px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 640px) {
-      .container { padding: 40px 20px; }
-      .header-content { flex-direction: column; align-items: flex-start; }
-    }
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="wrap">
     <header>
-      <div class="header-content">
+      <div class="header-row">
         <div>
           <h1>Differential Privacy for Beginners</h1>
           <p class="subtitle">These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.</p>
         </div>
-        <div class="hint-badge">Click a card to read</div>
+        <div class="hint">Click a Part card to open it</div>
       </div>
     </header>
 
     <main class="grid">
-      <script>
-        // Data for the first two parts you already have
-        const partsData = [
-          { title: "Introduction", desc: "Background, motivation, and common failures", link: "part1.html", img: "part1.jpeg" },
-          { title: "Reconstruction Attacks", desc: "How statistics can reveal the dataset", link: "part2.html", img: "part2.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part3.html", img: "part3.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part4.html", img: "part4.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part5.html", img: "part5.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part6.html", img: "part6.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part7.html", img: "part7.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part8.html", img: "part8.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part9.html", img: "part9.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part10.html", img: "part10.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part11.html", img: "part11.jpeg" },
-          { title: "(Next)", desc: "Coming soon", link: "part12.html", img: "part12.jpeg" }
-        ];
+      <a class="card" href="part1.html">
+        <div class="cover" data-img="part1.jpeg"></div>
+        <div class="content">
+          <div class="pill">Part 1</div>
+          <h2>Introduction</h2>
+          <p>Background, motivation, and common failures</p>
+          <div class="meta"><span>Read Article</span><span>Open →</span></div>
+        </div>
+      </a>
 
-        // Generate the 12 cards automatically
+      <a class="card" href="part2.html">
+        <div class="cover" data-img="part2.jpeg"></div>
+        <div class="content">
+          <div class="pill">Part 2</div>
+          <h2>Reconstruction Attacks</h2>
+          <p>How statistics can reveal the dataset</p>
+          <div class="meta"><span>Read Article</span><span>Open →</span></div>
+        </div>
+      </a>
+
+      <script>
+        // برای اینکه کد طولانی نشود، پارت‌های 3 تا 12 را اینجا اضافه می‌کنیم
         const grid = document.querySelector('.grid');
-        partsData.forEach((item, index) => {
-          const card = document.createElement('a');
-          card.className = 'card';
-          card.href = item.link;
-          card.innerHTML = `
-            <img class="cover-img" src="${item.img}" alt="" onerror="this.style.display='none'">
-            <div class="card-body">
-              <span class="part-tag">Part ${index + 1}</span>
-              <h2>${item.title}</h2>
-              <p>${item.desc}</p>
-              <div class="card-footer">
-                <span>Read Article</span>
-                <span class="btn-text">Open →</span>
+        for (let i = 3; i <= 12; i++) {
+          grid.innerHTML += `
+            <a class="card" href="part${i}.html">
+              <div class="cover" data-img="part${i}.jpeg"></div>
+              <div class="content">
+                <div class="pill">Part ${i}</div>
+                <h2>(Next)</h2>
+                <p>Coming soon</p>
+                <div class="meta"><span>Read Article</span><span>Open →</span></div>
               </div>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
+            </a>`;
+        }
       </script>
     </main>
 
-    <footer>
+    <footer style="margin-top: 60px; padding: 20px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; text-align: center;">
       © Your notes — GitHub Pages
     </footer>
   </div>
+
+  <script>
+    // این همان اسکریپت خودتان است که عکس‌ها را چک می‌کند
+    document.querySelectorAll('.cover[data-img]').forEach((cover) => {
+      const src = cover.getAttribute('data-img');
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        cover.appendChild(img);
+        cover.style.display = "block";
+      };
+      // اگر عکسی پیدا نشود، بخش کاور مخفی می‌ماند
+      img.onerror = () => { cover.style.display = "none"; };
+    });
+  </script>
 </body>
 </html>
