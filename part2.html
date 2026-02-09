@@ -203,13 +203,12 @@
         <h2>3. Reconstruction Attacks</h2>
 
         <h3>3.1 Reconstructing Private Data from Statistics</h3>
-        <p>
-          A reconstruction attack is one of the strongest ways to show that privacy has failed. In this type of attack, an adversary is able to recover the sensitive data of one or more people with very high accuracy. Sometimes the attacker can even recover the entire dataset. 
-        </p>
+                  <p>A reconstruction attack is one of the strongest ways to show that privacy has failed.</p>
 
-        <p>
-          The idea is simple: if the released numbers restrict the dataset enough, then only a few datasets—or even only one—can be consistent with them. When that happens, the attacker has effectively learned the original data.
-        </p>
+          <p>In this type of attack, an adversary is able to recover the sensitive data of one or more people with very high accuracy. Sometimes the attacker can even recover the entire dataset. These attacks prove that a system does not truly keep personal information private, even if it only releases statistics.</p>
+
+      <p>The idea is simple:<br>
+          if the released numbers restrict the dataset enough, then only a few datasets—or even only one—can be consistent with them. When that happens, the attacker has effectively learned the original data.</p>
 
         <h4>3.1.1 A Classic Logic Puzzle: The Census Interview</h4>
         <p>Imagine a census worker visiting a home and asking:</p>
@@ -222,6 +221,7 @@
         <blockquote>“I have an oldest daughter.”</blockquote>
         <p>At that point, the census worker says: <strong>“Now I know all their ages.”</strong></p>
 
+        
         <hr>
 
         <h4>Step 1 — Using the product</h4>
@@ -261,6 +261,37 @@
         </div>
         <p>The individual ages have been reconstructed exactly: <strong>(26, 30, 76)</strong>.</p>
 
+        <hr>
+
+        
+          <h4>3.1.3 Why Reconstruction Means Privacy Has Failed</h4>
+
+          <p>These examples show the same pattern.</p>
+
+          <p>There exists a hidden dataset:</p>
+
+          <div class="math-block">
+            D = (x<sub>1</sub>, &hellip;, x<sub>n</sub>).
+          </div>
+
+          <p>The system releases statistics:</p>
+
+          <div class="math-block">
+            f<sub>1</sub>(D), f<sub>2</sub>(D), &hellip;, f<sub>k</sub>(D),
+          </div>
+
+          <p>possibly with small noise:</p>
+
+          <div class="math-block">
+            a<sub>1</sub> &approx; f<sub>1</sub>(D), &hellip;, a<sub>k</sub> &approx; f<sub>k</sub>(D).
+          </div>
+
+          <p>These values impose constraints on (D).<br>
+          If only one dataset—or a very small number—satisfies those constraints, then the attacker has essentially recovered the data.</p>
+
+          <p>This leads to the following concept.</p>
+
+          <hr>
         <hr>
 
         <h3>Definition (Blatant Non-Privacy)</h3>
