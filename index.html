@@ -7,16 +7,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-color: #0b1220;
-      --card-bg: rgba(255, 255, 255, 0.04);
-      --text-color: #e5e7eb;
-      --muted: #94a3b8;
-      --accent: #60a5fa;
-      --border: rgba(255, 255, 255, 0.1);
+      --bg-color: #fcfcfc; /* پس‌زمینه روشن و تمیز مشابه عکس */
+      --text-dark: #333;
+      --accent: #b8d8d8; /* تم رنگی ملایم مشابه عکس دوم */
+      --border: #eeeeee;
     }
 
     * { box-sizing: border-box; }
@@ -24,179 +22,206 @@
     body {
       margin: 0;
       font-family: "Inter", sans-serif;
-      color: var(--text-color);
-      background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0b1220 100%);
-      min-height: 100vh;
-      overflow: hidden; /* جلوگیری از اسکرول کل صفحه برای تمرکز روی بخش کارت‌ها */
-    }
-
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      height: 100vh;
+      color: var(--text-dark);
+      background-color: var(--bg-color);
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
+    /* بخش بالایی صفحه */
     header {
-      margin-bottom: 30px;
-      flex-shrink: 0; /* هدر ثابت بماند */
+      text-align: center;
+      padding: 60px 20px 20px;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     h1 {
-      font-size: clamp(28px, 4vw, 42px);
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
-      background: linear-gradient(to right, #fff, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-family: 'Playfair Display', serif; /* فونت کلاسیک برای تایتل */
+      font-size: 42px;
+      margin-bottom: 15px;
+      color: #2c3e50;
     }
 
     .subtitle {
-      color: var(--muted);
-      max-width: 650px;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #7f8c8d;
+      margin-bottom: 30px;
     }
 
-    /* بخش اسکرول‌شونده کارت‌ها */
-    .scroll-container {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding-right: 10px;
-      /* تعیین ارتفاع برای دیدن فقط ۳ کارت اول (تقریبی) */
-      max-height: 520px; 
+    .divider {
+      width: 100px;
+      height: 1px;
+      background: #ccc;
+      margin: 0 auto 40px;
     }
 
-    /* استایل اسکرول‌بار ظریف */
-    .scroll-container::-webkit-scrollbar { width: 6px; }
-    .scroll-container::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 10px;
+    /* کانتینر اصلی برای جمع کردن محتوا در وسط */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      flex: 1;
     }
 
-    .grid {
+    /* استایل اسلایدر */
+    .slider-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-track {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-auto-flow: column;
+      grid-auto-columns: calc(25% - 15px); /* ۴ کارت در صفحه */
       gap: 20px;
-      padding-bottom: 40px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none; /* حذف اسکرول‌بار در فایرفاکس */
+      padding: 10px 0;
     }
+
+    .card-track::-webkit-scrollbar { display: none; } /* حذف اسکرول‌بار در کروم */
 
     .card {
-      background: var(--card-bg);
+      background: #fff;
       border: 1px solid var(--border);
-      border-radius: 18px;
       text-decoration: none;
       color: inherit;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
+      transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
+      text-align: center;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
+    .card:hover { transform: translateY(-5px); }
 
     .cover {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      background: rgba(255,255,255,.05);
-      display: none;
+      aspect-ratio: 3/4; /* حالت عمودی مشابه عکس */
+      background: #f9f9f9;
+      overflow: hidden;
+      display: block;
     }
 
     .cover img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .content {
+      padding: 20px 10px;
+    }
+
+    .pill {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 10px;
       display: block;
     }
 
-    .content { padding: 20px; }
-    .pill { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
-    h2 { margin: 0 0 8px; font-size: 19px; }
-    .card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
-    .meta { margin-top: 20px; display: flex; justify-content: space-between; font-size: 13px; color: var(--accent); font-weight: 600; }
+    h2 { font-size: 16px; margin: 0 0 10px; font-weight: 400; }
+    .card p { font-size: 12px; color: #777; line-height: 1.4; margin: 0; }
 
-    @media (max-width: 900px) { 
-      .grid { grid-template-columns: repeat(2, 1fr); } 
-      .scroll-container { max-height: 800px; }
+    /* دکمه‌های چپ و راست */
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border: 1px solid #ddd;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
-    @media (max-width: 600px) { 
-      .grid { grid-template-columns: 1fr; } 
+
+    .nav-btn:hover { background: #f0f0f0; }
+    .prev { left: -20px; }
+    .next { right: -20px; }
+
+    /* نوار رنگی پایین صفحه */
+    footer {
+      height: 80px;
+      background-color: var(--accent);
+      margin-top: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #555;
+      border-top: 5px solid rgba(255,255,255,0.3);
+    }
+
+    @media (max-width: 1000px) {
+      .card-track { grid-auto-columns: calc(50% - 10px); } /* ۲ کارت در موبایل */
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Differential Privacy for Beginners</h1>
-      <p class="subtitle">These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.</p>
-    </header>
 
-    <div class="scroll-container">
-      <main class="grid">
-        <a class="card" href="part1.html">
-          <div class="cover" data-img="part1.jpeg"></div>
-          <div class="content">
-            <div class="pill">Part 1</div>
-            <h2>Introduction</h2>
-            <p>Background, motivation, and common failures</p>
-            <div class="meta"><span>Read Article</span><span>Open →</span></div>
-          </div>
-        </a>
+  <header>
+    <h1>Differential Privacy</h1>
+    <p class="subtitle">An ode to everything data, privacy and finding beauty in algorithms.</p>
+    <div class="divider"></div>
+  </header>
 
-        <a class="card" href="part2.html">
-          <div class="cover" data-img="part2.jpeg"></div>
-          <div class="content">
-            <div class="pill">Part 2</div>
-            <h2>Reconstruction Attacks</h2>
-            <p>How statistics can reveal the dataset</p>
-            <div class="meta"><span>Read Article</span><span>Open →</span></div>
-          </div>
-        </a>
-
-        </main>
-    </div>
-
-    <footer style="margin-top: auto; padding: 20px 0; color: var(--muted); font-size: 13px; text-align: center;">
-      © Your notes — GitHub Pages
-    </footer>
+  <div class="main-container">
+    <button class="nav-btn prev" onclick="scrollGrid(-1)">&#10094;</button>
+    <button class="nav-btn next" onclick="scrollGrid(1)">&#10095;</button>
+    
+    <main class="card-track" id="slider">
+      </main>
   </div>
 
+  <footer>
+    © Differential Privacy for Beginners — 2024
+  </footer>
+
   <script>
-    // ساخت پارت‌های ۳ تا ۱۲
-    const grid = document.querySelector('.grid');
-    for (let i = 3; i <= 12; i++) {
+    const grid = document.getElementById('slider');
+    const parts = [
+      { title: "Introduction", desc: "Background and motivation", img: "part1.jpeg" },
+      { title: "Reconstruction Attacks", desc: "How statistics reveal data", img: "part2.jpeg" },
+      // بقیه پارت‌ها (۳ تا ۱۲)
+    ];
+
+    // ایجاد ۱۲ کارت
+    for (let i = 1; i <= 12; i++) {
+      const data = parts[i-1] || { title: "(Next)", desc: "Coming soon", img: `part${i}.jpeg` };
       grid.innerHTML += `
         <a class="card" href="part${i}.html">
-          <div class="cover" data-img="part${i}.jpeg"></div>
+          <div class="cover">
+            <img src="${data.img}" alt="" onerror="this.src='https://via.placeholder.com/300x400?text=Part+${i}'">
+          </div>
           <div class="content">
-            <div class="pill">Part ${i}</div>
-            <h2>(Next)</h2>
-            <p>Coming soon</p>
-            <div class="meta"><span>Read Article</span><span>Open →</span></div>
+            <span class="pill">Part ${i}</span>
+            <h2>${data.title}</h2>
+            <p>${data.desc}</p>
           </div>
         </a>`;
     }
 
-    // لود کردن عکس‌ها
-    document.querySelectorAll('.cover[data-img]').forEach((cover) => {
-      const src = cover.getAttribute('data-img');
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        cover.appendChild(img);
-        cover.style.display = "block";
-      };
-      img.onerror = () => { cover.style.display = "none"; };
-    });
+    // تابع جابجایی اسلایدر
+    function scrollGrid(direction) {
+      const scrollAmount = grid.clientWidth;
+      grid.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
   </script>
+
 </body>
 </html>
