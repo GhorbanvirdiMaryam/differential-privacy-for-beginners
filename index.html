@@ -8,12 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
     :root {
       --bg-color: #fcfcfc;
       --text-dark: #333;
-      --accent: #b8d8d8; /* رنگ سبز-آبی ملایم نوارها */
+      --accent: #b8d8d8;
       --border: #eeeeee;
       --secondary-text: #7f8c8d;
     }
@@ -30,9 +32,8 @@
       min-height: 100vh;
     }
 
-    /* --- نوار بسیار نازک بالای صفحه (Top Bar) --- */
     .top-nav-bar {
-      background-color: #b8d8d8; /* رنگ دقیق مشابه نمونه ارسالی */
+      background-color: #b8d8d8;
       padding: 10px 40px;
       display: flex;
       justify-content: space-between;
@@ -49,12 +50,24 @@
       margin-right: 25px;
     }
 
-    .top-nav-bar .socials {
+    /* استایل دهی به لوگوها */
+    .socials {
       display: flex;
       gap: 15px;
+      align-items: center;
     }
 
-    /* --- بخش هدر و برندینگ --- */
+    .socials a {
+      color: var(--text-dark);
+      font-size: 16px;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .socials a:hover {
+      opacity: 0.7;
+    }
+
     header {
       text-align: center;
       padding: 50px 20px 30px;
@@ -64,34 +77,17 @@
     .site-brand {
       font-family: 'Playfair Display', serif;
       font-size: 42px;
-      color: var(--accent); /* رنگ برند مطابق عکس */
+      color: var(--accent);
       margin: 0 0 25px 0;
       font-weight: 500;
       letter-spacing: -0.5px;
     }
 
-    /* منوی وسط هدر */
-    .main-nav {
-      margin-bottom: 40px;
-    }
-
-    .main-nav a {
-      text-decoration: none;
-      color: var(--text-dark);
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin: 0 18px;
-      font-weight: 400;
-    }
-
-    /* شعار (The Ode) */
     .tagline {
       max-width: 850px;
       margin: 0 auto;
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
+      font-size: 15px;
+      font-style: italic;
       color: var(--secondary-text);
       line-height: 1.8;
       font-weight: 400;
@@ -99,7 +95,6 @@
       padding-top: 30px;
     }
 
-    /* --- کانتینر اصلی و اسلایدر (بدون تغییر در منطق) --- */
     .main-container {
       max-width: 1200px;
       margin: 40px auto;
@@ -182,7 +177,6 @@
     .prev { left: -20px; }
     .next { right: -20px; }
 
-    /* نوار رنگی پایین صفحه */
     footer {
       height: 60px;
       background-color: #b8d8d8;
@@ -198,8 +192,6 @@
     @media (max-width: 1000px) {
       .card-track { grid-auto-columns: calc(50% - 10px); }
     }
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   </style>
 </head>
 
@@ -211,20 +203,18 @@
       <a href="#">Home</a>
       <a href="#">Contact</a>
     </div>
-    <<div class="socials">
-    <a href="https://github.com/GhorbanvirdiMaryam" target="_blank" title="GitHub">
-    <i class="fa-brands fa-github"></i>
-    </a>
-    <a href="https://www.linkedin.com/in/maryam-ghorbanvirdi/" target="_blank" title="LinkedIn">
-    <i class="fa-brands fa-linkedin"></i>
-  </a>
-</div>
+    <div class="socials">
+      <a href="https://github.com/GhorbanvirdiMaryam" target="_blank" title="GitHub">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/maryam-ghorbanvirdi/" target="_blank" title="LinkedIn">
+        <i class="fa-brands fa-linkedin"></i>
+      </a>
+    </div>
   </div>
 
   <header>
     <h1 class="site-brand">Differential Privacy for Beginners</h1>
-  
-
     <div class="tagline">
       “Privacy is rarely lost in one fell swoop. It is usually eroded over time, little bits dissolving almost imperceptibly until we finally begin to notice how much is gone.” ― Daniel J. Solove
     </div>
