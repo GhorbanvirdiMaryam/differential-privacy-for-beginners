@@ -5,438 +5,234 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Differential Privacy for Beginners</title>
 
-  <!-- Optional nicer font (works on GitHub Pages) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      /* Background colors (change these to try new looks) */
-      --bg1:#0b1220;
-      --bg2:#0f2a3a;
-
-      /* Card colors */
-      --card:#0f172a;
-      --text:#e5e7eb;
-      --muted:#a7b0c0;
-      --accent:#60a5fa;
-      --border: rgba(255,255,255,.10);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 18px;
+    :root {
+      --bg-dark: #070b14;
+      --bg-accent: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-color: #38bdf8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --radius: 16px;
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-
-    body{
-      margin:0;
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,.20), transparent 60%),
-        radial-gradient(1000px 700px at 90% 20%, rgba(34,211,238,.12), transparent 60%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100vh;
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-dark);
+      /* Elegant gradient background */
+      background: 
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+        var(--bg-dark);
+      min-height: 100vh;
+      line-height: 1.5;
     }
 
-    .wrap{
-      max-width:1100px;
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 28px 18px 60px;
+      padding: 60px 24px;
     }
 
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-
-      padding: 18px 0 14px;
-      margin-bottom: 18px;
-
-      backdrop-filter: blur(10px);
-      background: rgba(11,18,32,.55);
-      border-bottom: 1px solid var(--border);
+    /* Header Styling - No background box as requested */
+    header {
+      margin-bottom: 60px;
     }
 
-    .header-row{
-      display:flex;
-      gap:18px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    .title{
-      max-width: 760px;
+    h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      letter-spacing: -0.03em;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    h1{
-      font-size: clamp(28px, 3vw, 40px);
-      margin:0 0 10px;
-      letter-spacing: -0.02em;
-    }
-
-    .subtitle{
-      margin:0;
-      color:var(--muted);
-      line-height:1.7;
-      max-width: 70ch;
-    }
-
-    .hint{
-      margin-top: 10px;
-      color: rgba(229,231,235,.70);
-      font-size: 14px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(15,23,42,.35);
-      backdrop-filter: blur(6px);
-      height: fit-content;
-      white-space: nowrap;
-    }
-
-    /* Intro box under the title */
-    .intro-box{
-      margin: 14px 0 0;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      min-height: 70px; /* shows even when empty */
-      color: rgba(229,231,235,.85);
-    }
-
-    .grid{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:16px;
-
-      /* Only show first ~3 cards in view, rest scroll inside */
-      max-height: calc(100vh - 300px);
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-
-    /* Nice scrollbar (optional) */
-    .grid::-webkit-scrollbar { width: 10px; }
-    .grid::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,.12);
-      border-radius: 999px;
-      border: 2px solid rgba(0,0,0,0);
-      background-clip: padding-box;
-    }
-    .grid::-webkit-scrollbar-track { background: transparent; }
-
-    .card{
-      grid-column: span 4;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      text-decoration:none;
-      color:inherit;
-      position:relative;
-      transition: transform .15s ease, border-color .15s ease, background .15s ease;
-    }
-
-    .card:hover{
-      transform: translateY(-3px);
-      border-color: rgba(96,165,250,.35);
-      background: linear-gradient(180deg, rgba(96,165,250,.10), rgba(255,255,255,.03));
-    }
-
-    /* Hidden by default; only shows if image loads */
-    .cover{
-      width:100%;
-      aspect-ratio: 16 / 9;
-      background: rgba(255,255,255,.05);
-      display:none;
-    }
-
-    .cover img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .content{
-      padding: 16px 16px 18px;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size: 12px;
-      letter-spacing: .02em;
-      text-transform: uppercase;
-      color: rgba(229,231,235,.80);
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15,23,42,.50);
-      margin-bottom: 10px;
-    }
-
-    .card h2{
-      margin: 6px 0 8px;
+    .subtitle {
       font-size: 18px;
-      line-height: 1.35;
-      letter-spacing: -0.01em;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0;
     }
 
-    .card p{
-      margin:0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .meta{
-      margin-top: 14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      color: rgba(229,231,235,.70);
+    .hint-badge {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 100px;
       font-size: 13px;
+      color: var(--accent-color);
+      font-weight: 500;
     }
 
-    .go{
-      color: var(--accent);
+    /* The Grid - Now naturally scrollable with the page */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .cover-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #1e293b;
+      display: none; /* Only shown if image loads */
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .part-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-color);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 10px 0;
       font-weight: 600;
     }
 
-    footer{
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-      color: rgba(229,231,235,.60);
+    .card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin: 0 0 20px 0;
+      min-height: 45px;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 500;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+
+    .btn-text {
+      color: var(--accent-color);
+    }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
       font-size: 14px;
     }
 
-    @media (max-width: 980px){
-      .card{ grid-column: span 6; }
-      .grid{ max-height: calc(100vh - 320px); }
-    }
-
-    @media (max-width: 640px){
-      .card{ grid-column: span 12; }
-      .hint{ width: 100%; text-align:center; white-space: normal; }
-      .grid{ max-height: calc(100vh - 360px); }
+    /* Mobile adjustments */
+    @media (max-width: 640px) {
+      .container { padding: 40px 20px; }
+      .header-content { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <div class="container">
     <header>
-      <div class="header-row">
-        <div class="title">
+      <div class="header-content">
+        <div>
           <h1>Differential Privacy for Beginners</h1>
-          <p class="subtitle">
-            These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.
-          </p>
-
-          <!-- Intro box (you can write anything here later) -->
-          <section class="intro-box">
-            <!-- Write your intro here -->
-          </section>
+          <p class="subtitle">These notes reflect my personal understanding of differential privacy, with the goal of explaining the core intuition to students.</p>
         </div>
-
-        <div class="hint">Click a Part card to open it</div>
+        <div class="hint-badge">Click a card to read</div>
       </div>
     </header>
 
-    <section class="grid" aria-label="Parts">
+    <main class="grid">
+      <script>
+        // Data for the first two parts you already have
+        const partsData = [
+          { title: "Introduction", desc: "Background, motivation, and common failures", link: "part1.html", img: "part1.jpeg" },
+          { title: "Reconstruction Attacks", desc: "How statistics can reveal the dataset", link: "part2.html", img: "part2.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part3.html", img: "part3.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part4.html", img: "part4.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part5.html", img: "part5.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part6.html", img: "part6.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part7.html", img: "part7.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part8.html", img: "part8.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part9.html", img: "part9.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part10.html", img: "part10.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part11.html", img: "part11.jpeg" },
+          { title: "(Next)", desc: "Coming soon", link: "part12.html", img: "part12.jpeg" }
+        ];
 
-      <!-- Part 1 -->
-      <a class="card" href="part1.html">
-        <div class="cover" data-img="part1.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 1</div>
-          <h2>Introduction</h2>
-          <p>Background, motivation, and common failures</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 2 -->
-      <a class="card" href="part2.html">
-        <div class="cover" data-img="part2.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 2</div>
-          <h2>Reconstruction Attacks</h2>
-          <p>How statistics can reveal the dataset</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 3 -->
-      <a class="card" href="part3.html">
-        <div class="cover" data-img="part3.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 3</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 4 -->
-      <a class="card" href="part4.html">
-        <div class="cover" data-img="part4.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 4</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 5 -->
-      <a class="card" href="part5.html">
-        <div class="cover" data-img="part5.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 5</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 6 (fixed link) -->
-      <a class="card" href="part6.html">
-        <div class="cover" data-img="part6.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 6</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 7 -->
-      <a class="card" href="part7.html">
-        <div class="cover" data-img="part7.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 7</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 8 -->
-      <a class="card" href="part8.html">
-        <div class="cover" data-img="part8.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 8</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 9 -->
-      <a class="card" href="part9.html">
-        <div class="cover" data-img="part9.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 9</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 10 -->
-      <a class="card" href="part10.html">
-        <div class="cover" data-img="part10.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 10</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 11 -->
-      <a class="card" href="part11.html">
-        <div class="cover" data-img="part11.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 11</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- Part 12 -->
-      <a class="card" href="part12.html">
-        <div class="cover" data-img="part12.jpeg"></div>
-        <div class="content">
-          <div class="pill">Part 12</div>
-          <h2>(Next)</h2>
-          <p>Coming soon</p>
-          <div class="meta">
-            <span>Read</span><span class="go">Open →</span>
-          </div>
-        </div>
-      </a>
-
-    </section>
+        // Generate the 12 cards automatically
+        const grid = document.querySelector('.grid');
+        partsData.forEach((item, index) => {
+          const card = document.createElement('a');
+          card.className = 'card';
+          card.href = item.link;
+          card.innerHTML = `
+            <img class="cover-img" src="${item.img}" alt="" onerror="this.style.display='none'">
+            <div class="card-body">
+              <span class="part-tag">Part ${index + 1}</span>
+              <h2>${item.title}</h2>
+              <p>${item.desc}</p>
+              <div class="card-footer">
+                <span>Read Article</span>
+                <span class="btn-text">Open →</span>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      </script>
+    </main>
 
     <footer>
       © Your notes — GitHub Pages
     </footer>
   </div>
-
-  <script>
-    // Only show cover if the image actually loads (prevents broken/empty look)
-    document.querySelectorAll('.cover[data-img]').forEach((cover) => {
-      const src = cover.getAttribute('data-img');
-      if (!src) return;
-
-      const img = new Image();
-      img.src = src;
-      img.alt = "";
-
-      img.onload = () => {
-        cover.appendChild(img);
-        cover.style.display = "block";
-      };
-
-      img.onerror = () => {
-        cover.style.display = "none";
-      };
-    });
-  </script>
 </body>
 </html>
