@@ -7,14 +7,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-color: #fcfcfc; /* پس‌زمینه روشن و تمیز مشابه عکس */
+      --bg-color: #fcfcfc;
       --text-dark: #333;
-      --accent: #b8d8d8; /* تم رنگی ملایم مشابه عکس دوم */
+      --accent: #b8d8d8; /* رنگ سبز-آبی ملایم نوارها */
       --border: #eeeeee;
+      --secondary-text: #7f8c8d;
     }
 
     * { box-sizing: border-box; }
@@ -29,64 +30,96 @@
       min-height: 100vh;
     }
 
-    /* بخش بالایی صفحه */
+    /* --- نوار بسیار نازک بالای صفحه (Top Bar) --- */
+    .top-nav-bar {
+      background-color: #d1e3e3; /* رنگ دقیق مشابه نمونه ارسالی */
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 400;
+    }
+
+    .top-nav-bar .links a {
+      text-decoration: none;
+      color: var(--text-dark);
+      margin-right: 25px;
+    }
+
+    .top-nav-bar .socials {
+      display: flex;
+      gap: 15px;
+    }
+
+    /* --- بخش هدر و برندینگ --- */
     header {
       text-align: center;
-      padding: 60px 20px 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      padding: 50px 20px 30px;
+      background-color: white;
     }
 
-    h1 {
-      font-family: 'Playfair Display', serif; /* فونت کلاسیک برای تایتل */
+    .site-brand {
+      font-family: 'Playfair Display', serif;
       font-size: 42px;
-      margin-bottom: 15px;
-      color: #2c3e50;
+      color: var(--accent); /* رنگ برند مطابق عکس */
+      margin: 0 0 25px 0;
+      font-weight: 500;
+      letter-spacing: -0.5px;
     }
 
-    .subtitle {
-      font-size: 14px;
+    /* منوی وسط هدر */
+    .main-nav {
+      margin-bottom: 40px;
+    }
+
+    .main-nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 2px;
-      color: #7f8c8d;
-      margin-bottom: 30px;
+      margin: 0 18px;
+      font-weight: 400;
     }
 
-    .divider {
-      width: 100px;
-      height: 1px;
-      background: #ccc;
-      margin: 0 auto 40px;
+    /* شعار (The Ode) */
+    .tagline {
+      max-width: 850px;
+      margin: 0 auto;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--secondary-text);
+      line-height: 1.8;
+      font-weight: 400;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 30px;
     }
 
-    /* کانتینر اصلی برای جمع کردن محتوا در وسط */
+    /* --- کانتینر اصلی و اسلایدر (بدون تغییر در منطق) --- */
     .main-container {
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 40px auto;
       padding: 0 40px;
       position: relative;
       flex: 1;
     }
 
-    /* استایل اسلایدر */
-    .slider-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
     .card-track {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: calc(25% - 15px); /* ۴ کارت در صفحه */
+      grid-auto-columns: calc(25% - 15px);
       gap: 20px;
       overflow-x: auto;
       scroll-behavior: smooth;
-      scrollbar-width: none; /* حذف اسکرول‌بار در فایرفاکس */
-      padding: 10px 0;
+      scrollbar-width: none;
+      padding: 20px 0;
     }
 
-    .card-track::-webkit-scrollbar { display: none; } /* حذف اسکرول‌بار در کروم */
+    .card-track::-webkit-scrollbar { display: none; }
 
     .card {
       background: #fff;
@@ -103,7 +136,7 @@
 
     .cover {
       width: 100%;
-      aspect-ratio: 3/4; /* حالت عمودی مشابه عکس */
+      aspect-ratio: 3/4;
       background: #f9f9f9;
       overflow: hidden;
       display: block;
@@ -115,23 +148,20 @@
       object-fit: cover;
     }
 
-    .content {
-      padding: 20px 10px;
-    }
+    .content { padding: 20px 10px; }
 
     .pill {
       font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 13px;
       color: #999;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: block;
     }
 
-    h2 { font-size: 16px; margin: 0 0 10px; font-weight: 400; }
+    h2 { font-size: 16px; margin: 0 0 10px; font-weight: 400; color: #333; }
     .card p { font-size: 12px; color: #777; line-height: 1.4; margin: 0; }
 
-    /* دکمه‌های چپ و راست */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -149,35 +179,55 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .nav-btn:hover { background: #f0f0f0; }
     .prev { left: -20px; }
     .next { right: -20px; }
 
     /* نوار رنگی پایین صفحه */
     footer {
-      height: 80px;
-      background-color: var(--accent);
-      margin-top: 60px;
+      height: 60px;
+      background-color: #d1e3e3;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       color: #555;
-      border-top: 5px solid rgba(255,255,255,0.3);
     }
 
     @media (max-width: 1000px) {
-      .card-track { grid-auto-columns: calc(50% - 10px); } /* ۲ کارت در موبایل */
+      .card-track { grid-auto-columns: calc(50% - 10px); }
     }
   </style>
 </head>
 
 <body>
 
+  <div class="top-nav-bar">
+    <div class="links">
+      <a href="#">About</a>
+      <a href="#">Shop</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="socials">
+      <span>TW</span> <span>IG</span> <span>FB</span>
+    </div>
+  </div>
+
   <header>
-    <h1>Differential Privacy for Beginners</h1>
-    <p class="subtitle">Privacy is rarely lost in one fell swoop. It is usually eroded over time, little bits dissolving almost imperceptibly until we finally begin to notice how much is gone. Daniel J. Solove</p>
-    <div class="divider"></div>
+    <h1 class="site-brand">Differential Privacy</h1>
+    
+    <nav class="main-nav">
+      <a href="#">Home</a>
+      <a href="#">Travel</a>
+      <a href="#">Lifestyle</a>
+      <a href="#">Algorithms</a>
+      <a href="#">All Posts</a>
+    </nav>
+
+    <div class="tagline">
+      An ode to everything data, privacy and finding beauty in algorithms.
+    </div>
   </header>
 
   <div class="main-container">
@@ -197,10 +247,8 @@
     const parts = [
       { title: "Introduction", desc: "Background and motivation", img: "part1.png" },
       { title: "Reconstruction Attacks", desc: "How statistics reveal data", img: "part2.png" },
-      // بقیه پارت‌ها (۳ تا ۱۲)
     ];
 
-    // ایجاد ۱۲ کارت
     for (let i = 1; i <= 12; i++) {
       const data = parts[i-1] || { title: "(Next)", desc: "Coming soon", img: `part${i}.png` };
       grid.innerHTML += `
@@ -216,7 +264,6 @@
         </a>`;
     }
 
-    // تابع جابجایی اسلایدر
     function scrollGrid(direction) {
       const scrollAmount = grid.clientWidth;
       grid.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
