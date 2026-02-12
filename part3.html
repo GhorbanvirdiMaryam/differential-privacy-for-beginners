@@ -3,175 +3,237 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Part 2 — Reconstruction Attacks</title>
+  <title>Part 3 — Formalizing Privacy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    :root{
-      --bg1:#0b1220;
-      --bg2:#0f2a3a;
-      --card:#0f172a;
-      --text:#e5e7eb;
-      --muted:#a7b0c0;
-      --accent:#60a5fa;
-      --border: rgba(255,255,255,.12);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,.20), transparent 60%),
-        radial-gradient(1000px 700px at 90% 20%, rgba(34,211,238,.12), transparent 60%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      min-height:100vh;
+    :root {
+      --bg-color: #fcfcfc;
+      --paper-color: #ffffff;
+      --text-main: #2d3436;
+      --text-muted: #636e72;
+      --accent: #b8d8d8; 
+      --border-color: #eeeeee;
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
     }
 
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 16px 70px;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background-color: var(--bg-color);
+      line-height: 1.8;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-
-    .back{
-      text-decoration:none;
-      color: rgba(229,231,235,.85);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(15,23,42,.35);
-    }
-    .back:hover{ border-color: rgba(96,165,250,.35); }
-
-    .card{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(15,23,42,.55);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .hero{
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .hero .kicker{
-      color: rgba(229,231,235,.75);
-      font-size: 13px;
+    .top-nav {
+      background-color: #d1e3e3;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: .04em;
-      margin:0 0 6px;
+      letter-spacing: 1.5px;
     }
 
-    .hero h1{
-      margin:0;
-      font-size: clamp(24px, 3vw, 34px);
-      letter-spacing: -0.02em;
+    .top-nav a {
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center; gap: 8px;
     }
 
-    main{
-      padding: 18px 20px 26px;
+    .article-wrap {
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 0 20px;
     }
 
-    /* Reading typography */
-    p{ line-height: 1.75; margin: 12px 0; color: rgba(229,231,235,.92); text-align: justify; hyphens: auto; }
-    h2,h3,h4,h5{ line-height:1.25; margin: 18px 0 10px; }
-    h2{ font-size: 22px; }
-    h3{ font-size: 18px; color: rgba(229,231,235,.95); }
-    h4{ font-size: 16px; color: rgba(229,231,235,.90); }
-    ul{ margin: 10px 0 10px 22px; }
-    li{ margin: 6px 0; color: rgba(229,231,235,.90); }
-
-    blockquote{
-      margin: 12px 0;
-      padding: 12px 14px;
-      border-left: 3px solid rgba(96,165,250,.55);
-      background: rgba(96,165,250,.10);
-      border-radius: 10px;
-      color: rgba(229,231,235,.92);
+    .article-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
 
-    hr{
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0;
+    .article-header .kicker {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
     }
 
-    .math-block{
-      margin: 10px 0;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255,255,255,.04);
+    .article-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 5vw, 48px);
+      margin: 0;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .article-header .divider {
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 30px auto;
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      margin-top: 60px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-family: var(--font-sans);
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 40px;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 17px;
+      color: #3d3d3d;
+      text-align: justify;
+    }
+
+    .math-block {
+      background: #f8f9fa;
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      margin: 25px 0;
+      font-family: 'ui-monospace', 'Courier New', monospace;
+      font-size: 15px;
+      border-radius: 4px;
       overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 14px;
-      color: rgba(229,231,235,.92);
-      white-space: nowrap;
+      line-height: 1.5;
     }
 
-    table{
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0;
-      overflow:hidden;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+    .definition-box {
+      border: 1px solid var(--border-color);
+      padding: 25px;
+      margin: 30px 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
-    th, td{
-      padding: 10px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      color: rgba(229,231,235,.92);
-      font-size: 14px;
-    }
-    th{ color: rgba(229,231,235,.95); background: rgba(255,255,255,.05); }
-    tr:last-child td{ border-bottom: none; }
 
-    footer{
-      margin-top: 18px;
-      color: rgba(229,231,235,.60);
-      font-size: 14px;
-      text-align:center;
+    .definition-box h4 {
+      margin-top: 0;
+      color: var(--text-main);
+      font-family: var(--font-serif);
+      font-style: italic;
     }
+
+    footer {
+      margin: 80px 0 40px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    ul { padding-left: 20px; }
+    li { margin-bottom: 15px; font-size: 16px; color: #444; }
+    b { color: #2d3436; }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <a class="back" href="index.html">← Back to all parts</a>
-      <div style="color: rgba(229,231,235,.70); font-size:14px;">Differential Privacy for Beginners</div>
-    </div>
 
-    <div class="card">
-      <div class="hero">
-        <p class="kicker">Part 2</p>
-        <h1>Reconstruction Attacks</h1>
-      </div>
-
-      <main>
-        <!-- PASTE YOUR PART 2 TEXT HERE (UNCHANGED) -->
-        <!-- Example: paste the exact text you already have for Section 3 -->
-      </main>
-    </div>
-
-    <footer>© Your notes — GitHub Pages</footer>
+  <div class="top-nav">
+    <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Archive</a>
+    <span>Differential Privacy for Beginners</span>
   </div>
+
+  <article class="article-wrap">
+    <header class="article-header">
+      <span class="kicker">Chapter Three</span>
+      <h1>Under what circumstances is privacy maintained?</h1>
+      <div class="divider"></div>
+    </header>
+
+    <main>
+      <section id="principles">
+        <h2>4. Seeking a Robust Standard</h2>
+        <p>
+          After witnessing how easily simple statistics can lead to full data reconstruction, we must ask: 
+          <em>Is there a way to guarantee privacy?</em> 
+          Instead of just reacting to known attacks (like linkage or differencing attacks), we need a mathematical property that provably resists <strong>any</strong> possible attack—even those not yet invented.
+        </p>
+
+        <h3>4.1 The Intuition of Tore Dalenius (1977)</h3>
+        <p>
+          One of the earliest attempts to define privacy came from Tore Dalenius. He proposed a simple but powerful idea: 
+          Access to a statistical database should not allow an observer to learn anything new about an individual that they couldn't have learned without that database.
+        </p>
+
+        <div class="definition-box">
+          <h4>The Dalenius Principle</h4>
+          <p style="font-style: italic; font-size: 16px;">
+            "If the release of a statistic $S$ makes it possible to determine the value of a characteristic $D_k$ of data subject $k$ more accurately than is possible without $S$, then a disclosure has taken place."
+          </p>
+        </div>
+
+        <p>
+          Think of this as comparing two worlds: 
+          In the <b>Real World</b>, the attacker has the statistics. In the <b>Ideal World</b>, they don't. 
+          If the attacker is noticeably more successful in the real world, privacy is lost. 
+          However, as intuitive as this sounds, it is mathematically impossible to achieve while still keeping the data useful. If we learn that "smoking causes cancer" from a dataset, we've learned something new about smokers in that data, even if it's a general trend.
+        </p>
+
+        
+        <h2>5. The Modern Standard: Differential Privacy</h2>
+        <p>
+          Differential Privacy (DP) solves the Dalenius dilemma by changing the baseline. Instead of asking what an attacker knows "with vs. without" the dataset, we ask: 
+          <b>What changes if one person's data is added or removed?</b>
+        </p>
+
+        <div class="definition-box">
+          <h4>Definition 4.1: Neighboring Datasets</h4>
+          <p>Let $D$ be a data domain. Two datasets $x, x' \in D^n$ are called neighboring if they differ on exactly one entry, i.e., $|\{i : x_i \neq x'_i\}| = 1$.</p>
+          
+          <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+          
+          <h4>Definition 4.2: Differential Privacy</h4>
+          <p>A mechanism $M : D^n \to R$ is $(\epsilon, \delta)$-differentially private if for all neighboring $x, x' \in D^n$ and for all events $S \subseteq R$,</p>
+          <div class="math-block">
+            $Pr[M(x) \in E] \leq e^\epsilon \cdot Pr[M(x') \in E] + \delta$
+          </div>
+        </div>
+
+        <h3>Key Properties of the Definition</h3>
+        <ul>
+          <li><b>The Parameter $\epsilon$:</b> This is your "privacy budget." Smaller $\epsilon$ means better privacy. Usually, we aim for $\epsilon < 1$ (like 0.1 or 0.01). If $\epsilon$ is too small, the data becomes useless noise; if it's too large, privacy vanishes.</li>
+          <li><b>The Parameter $\delta$:</b> This represents the probability of a complete privacy failure. We aim for $\delta$ to be extremely small—much smaller than $1/n$.</li>
+          <li><b>Randomness is Required:</b> To satisfy this definition, an algorithm <strong>must</strong> be randomized. It must "blur" the results slightly so that the presence or absence of a single individual doesn't significantly change the output.</li>
+        </ul>
+
+        <blockquote>
+          "Differential Privacy is a property of the algorithm itself, not the data. It provides a worst-case guarantee that protects everyone, regardless of what an attacker already knows."
+        </blockquote>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 — Differential Privacy Series — Maryam Ghorbanvirdi
+    </footer>
+  </article>
+
 </body>
 </html>
